@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/home/jcdkiki/code/oop/lb1/build",
+  "command": "/usr/bin/clang++ -I/home/jcdkiki/code/oop/lb1/seabattle -I/home/jcdkiki/code/oop/lb1/src -g -std=gnu++17 -o CMakeFiles/seabattle.dir/src/game.cpp.o -c /home/jcdkiki/code/oop/lb1/src/game.cpp",
+  "file": "/home/jcdkiki/code/oop/lb1/src/game.cpp"
+},
+{
+  "directory": "/home/jcdkiki/code/oop/lb1/build",
+  "command": "/usr/bin/clang++ -I/home/jcdkiki/code/oop/lb1/seabattle -I/home/jcdkiki/code/oop/lb1/src -g -std=gnu++17 -o CMakeFiles/seabattle.dir/src/main.cpp.o -c /home/jcdkiki/code/oop/lb1/src/main.cpp",
+  "file": "/home/jcdkiki/code/oop/lb1/src/main.cpp"
+},
+{
+  "directory": "/home/jcdkiki/code/oop/lb1/build",
+  "command": "/usr/bin/clang++ -I/home/jcdkiki/code/oop/lb1/seabattle -I/home/jcdkiki/code/oop/lb1/src -g -std=gnu++17 -o CMakeFiles/seabattle.dir/src/ship.cpp.o -c /home/jcdkiki/code/oop/lb1/src/ship.cpp",
+  "file": "/home/jcdkiki/code/oop/lb1/src/ship.cpp"
+},
+{
+  "directory": "/home/jcdkiki/code/oop/lb1/build",
+  "command": "/usr/bin/clang++ -I/home/jcdkiki/code/oop/lb1/seabattle -I/home/jcdkiki/code/oop/lb1/src -g -std=gnu++17 -o CMakeFiles/seabattle.dir/src/ship_manager.cpp.o -c /home/jcdkiki/code/oop/lb1/src/ship_manager.cpp",
+  "file": "/home/jcdkiki/code/oop/lb1/src/ship_manager.cpp"
+},
+{
+  "directory": "/home/jcdkiki/code/oop/lb1/build",
+  "command": "/usr/bin/clang++ -I/home/jcdkiki/code/oop/lb1/seabattle -I/home/jcdkiki/code/oop/lb1/src -g -std=gnu++17 -o CMakeFiles/seabattle.dir/src/states/placing.cpp.o -c /home/jcdkiki/code/oop/lb1/src/states/placing.cpp",
+  "file": "/home/jcdkiki/code/oop/lb1/src/states/placing.cpp"
+},
+{
+  "directory": "/home/jcdkiki/code/oop/lb1/build",
+  "command": "/usr/bin/clang++ -I/home/jcdkiki/code/oop/lb1/seabattle -I/home/jcdkiki/code/oop/lb1/src -g -std=gnu++17 -o CMakeFiles/seabattle.dir/src/states/welcome.cpp.o -c /home/jcdkiki/code/oop/lb1/src/states/welcome.cpp",
+  "file": "/home/jcdkiki/code/oop/lb1/src/states/welcome.cpp"
+}
+]

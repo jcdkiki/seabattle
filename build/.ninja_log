@@ -1,0 +1,8 @@
+# ninja log v5
+1	357	1727635912322033159	CMakeFiles/seabattle.dir/src/game.cpp.o	3244fe9eb7d8e95
+1	149	1727635124586309622	CMakeFiles/seabattle.dir/src/ship_manager.cpp.o	e30d7e71c3bf1a6d
+1	133	1727635124570309402	CMakeFiles/seabattle.dir/src/ship.cpp.o	33c73bbc95f14b38
+357	408	1727635912374034144	seabattle	bcd089df667a0855
+1	311	1727635912274032250	CMakeFiles/seabattle.dir/src/states/placing.cpp.o	8fd525187bd3a0ad
+0	297	1727635023940918290	CMakeFiles/seabattle.dir/src/main.cpp.o	cae1a2e06d097ec6
+0	20	1727700147039164198	build.ninja	c0100ce8fd590285
