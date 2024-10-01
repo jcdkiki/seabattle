@@ -10,7 +10,7 @@ namespace seabattle {
         GlobalState state;
     public:
         Game();
-        void MainLoop();
+        void mainLoop();
     };
 }
 

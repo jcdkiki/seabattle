@@ -10,12 +10,12 @@ namespace seabattle {
     };
 
     namespace colors {
-        constexpr Color Water { 166, 204, 237 };
-        constexpr Color Full { 173, 247, 183 };
-        constexpr Color Damaged { 224, 138, 76 };
-        constexpr Color Destroyed { 222, 42, 42 };
-        constexpr Color Fog { 78, 99, 107 };
-        constexpr Color Error { 252, 0, 219 };
+        constexpr Color WATER { 166, 204, 237 };
+        constexpr Color FULL { 173, 247, 183 };
+        constexpr Color DAMAGED { 224, 138, 76 };
+        constexpr Color DESTROYED { 222, 42, 42 };
+        constexpr Color FOG { 78, 99, 107 };
+        constexpr Color ERROR { 252, 0, 219 };
     };
 };
 

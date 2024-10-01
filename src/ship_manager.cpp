@@ -7,16 +7,16 @@ namespace seabattle {
         : ship_size_cnt()
     {
         for (size_t size : ship_size_list) {
-            if (size == 0 || size > Ship::max_size) {
+            if (size == 0 || size > Ship::MAX_SIZE) {
                 throw std::invalid_argument("Invalid ship size");
             }
             ship_size_cnt[size - 1]++;
         }
     }
 
-    void ShipManager::CreateShip(vec2 position, size_t size, Ship::Orientation orientation)
+    void ShipManager::createShip(vec2 position, size_t size, Ship::Orientation orientation)
     {
-        if (size == 0 || size > Ship::max_size) {
+        if (size == 0 || size > Ship::MAX_SIZE) {
             throw std::invalid_argument("Invalid ship size");
         }
 

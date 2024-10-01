@@ -27,21 +27,21 @@ namespace seabattle {
         title.setPosition(10, 10);
     }
 
-    void GlobalState::OnKeyDown(sf::Keyboard::Key key)
+    void GlobalState::onKeyDown(sf::Keyboard::Key key)
     {
         if (substate) {
-            substate->OnKeyDown(key);
+            substate->onKeyDown(key);
         }
     }
 
-    void GlobalState::Render()
+    void GlobalState::render()
     {
-        window.clear(colors::Fog);
+        window.clear(colors::FOG);
         
-        field.Render();
+        field.render();
 
         if (substate) {
-            substate->Render();
+            substate->render();
         }
 
         window.pushGLStates();

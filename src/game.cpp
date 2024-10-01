@@ -19,7 +19,7 @@ namespace seabattle {
         glLoadIdentity();
     }
 
-    void Game::MainLoop()
+    void Game::mainLoop()
     {
         while (window.isOpen()) {
             sf::Event event;
@@ -30,15 +30,14 @@ namespace seabattle {
                         window.close();
                         break;
                     case sf::Event::KeyPressed:
-                        state.OnKeyDown(event.key.code);
+                        state.onKeyDown(event.key.code);
                         break;
                     default:
                         break;
                 }
             }
 
-            state.Render();
-            
+            state.render();
             window.display();
         }
     };

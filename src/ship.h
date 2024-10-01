@@ -8,7 +8,7 @@
 namespace seabattle {
     class Ship {
     public:
-        static constexpr size_t max_size = 4;
+        static constexpr size_t MAX_SIZE = 4;
         
         enum class Orientation : char {
             HORIZONTAL,
@@ -24,7 +24,7 @@ namespace seabattle {
     private:
         vec2 position;
         size_t size;
-        SegmentState segments[max_size];
+        SegmentState segments[MAX_SIZE];
         Orientation orientation;
 
     public:
@@ -33,7 +33,7 @@ namespace seabattle {
             size_t index;
         public:
             Iterator(Ship *ship = nullptr, size_t index = 0) : ship(ship), index(index) {}
-            void Damage() { ship->DamageSegment(index); }
+            void damage() { ship->damageSegment(index); }
 
             inline SegmentState operator*() { return ship->segments[index]; }
             inline operator bool() { return ship != nullptr; }
@@ -41,15 +41,15 @@ namespace seabattle {
 
         explicit Ship(vec2 position, size_t size, Orientation orientation);
         
-        void DamageSegment(size_t index);
+        void damageSegment(size_t index);
         Iterator operator[](vec2 position);
         
-        inline bbox2 GetBoundingBox() const
+        inline bbox2 getBoundingBox() const
         {
-            return Ship::GetBoundingBox(position, size, orientation);
+            return Ship::getBoundingBox(position, size, orientation);
         }
 
-        inline static bbox2 GetBoundingBox(vec2 position, int size, Orientation orientation)
+        inline static bbox2 getBoundingBox(vec2 position, int size, Orientation orientation)
         {
             if (orientation == Orientation::HORIZONTAL)
                 return bbox2(position, position + vec2(size, 1));

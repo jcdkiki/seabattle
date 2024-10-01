@@ -15,8 +15,8 @@ namespace seabattle {
     public:
         class Substate {
         public:
-            virtual void OnKeyDown(sf::Keyboard::Key) = 0;
-            virtual void Render() = 0;
+            virtual void onKeyDown(sf::Keyboard::Key) = 0;
+            virtual void render() = 0;
             virtual ~Substate() {}
         };
 
@@ -34,8 +34,8 @@ namespace seabattle {
 
     public:
         GlobalState(sf::RenderWindow &window);
-        void OnKeyDown(sf::Keyboard::Key);
-        void Render();
+        void onKeyDown(sf::Keyboard::Key);
+        void render();
     };
 }
 

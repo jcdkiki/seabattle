@@ -20,7 +20,7 @@ namespace seabattle {
         );
     }
 
-    void BattleState::OnKeyDown(sf::Keyboard::Key key)
+    void BattleState::onKeyDown(sf::Keyboard::Key key)
     {
         switch (key) {
             case sf::Keyboard::A:
@@ -37,7 +37,7 @@ namespace seabattle {
                 break;
             case sf::Keyboard::Enter:
                 try {
-                    global.field.Attack(cursor);
+                    global.field.attack(cursor);
                 } catch (std::invalid_argument &e) {
                     global.message.setString(std::string("Error: ") + e.what());
                 }
@@ -50,7 +50,7 @@ namespace seabattle {
         }
     }
 
-    void BattleState::Render()
+    void BattleState::render()
     {
         vec2 screen_coord = Field::field_position
             + vec2(cursor.x * Field::cell_size.x, cursor.y * Field::cell_size.y);

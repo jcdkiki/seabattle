@@ -30,7 +30,7 @@ namespace seabattle {
         return true;
     }
 
-    void WelcomeState::OnKeyDown(sf::Keyboard::Key key)
+    void WelcomeState::onKeyDown(sf::Keyboard::Key key)
     {
         switch (key) {
             case sf::Keyboard::Enter:
@@ -59,7 +59,7 @@ namespace seabattle {
         }
     }
 
-    void WelcomeState::Render()
+    void WelcomeState::render()
     {
         field_size_text.setString("Field size: " + std::to_string(field_size.x) + " x " + std::to_string(field_size.y));
         global.window.pushGLStates();

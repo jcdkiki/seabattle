@@ -24,7 +24,7 @@ namespace seabattle {
         ship_count_text.setPosition(10, 50);
     }
 
-    void PlacingState::OnKeyDown(sf::Keyboard::Key key)
+    void PlacingState::onKeyDown(sf::Keyboard::Key key)
     {
         switch (key) {
             case sf::Keyboard::R:
@@ -50,13 +50,13 @@ namespace seabattle {
                 break;
             case sf::Keyboard::Enter:
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-                    global.field.CoverInFog();
+                    global.field.coverInFog();
                     global.substate = std::make_unique<BattleState>(global);
                     return;
                 }
 
                 try {
-                    global.field.CreateShip(position, size, orientation, true);
+                    global.field.createShip(position, size, orientation, true);
                 } catch (std::invalid_argument &e) {
                     global.message.setString(std::string("Error: ") + e.what());
                 }
@@ -66,7 +66,7 @@ namespace seabattle {
         }
     }
 
-    void PlacingState::Render()
+    void PlacingState::render()
     {
         vec2 delta = (orientation == Ship::Orientation::HORIZONTAL) ? vec2(1, 0) : vec2(0, 1);
         vec2 cur_position = position;
@@ -88,8 +88,10 @@ namespace seabattle {
         glEnd();
 
         std::string ship_count_str;
-        for (int i = 1; i <= Ship::max_size; i++) {
-            ship_count_str += std::to_string(i) + ": " + std::to_string(global.field.GetNumberOfAvailibleShips(i)) + " left   ";
+        for (int i = 1; i <= Ship::MAX_SIZE; i++) {
+            ship_count_str += 
+                std::to_string(i) + ": " +
+                std::to_string(global.field.getAvailibleShipsCount(i)) + " left  |  ";
         }
         ship_count_text.setString(ship_count_str);
 

@@ -3,6 +3,6 @@
 int main()
 {    
     seabattle::Game game;
-    game.MainLoop();
+    game.mainLoop();
     return 0;
 };

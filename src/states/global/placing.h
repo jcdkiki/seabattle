@@ -16,8 +16,8 @@ namespace seabattle {
     public:
 
         PlacingState(GlobalState &global);
-        virtual void OnKeyDown(sf::Keyboard::Key key) override;
-        virtual void Render() override;
+        virtual void onKeyDown(sf::Keyboard::Key key) override;
+        virtual void render() override;
         virtual ~PlacingState() override = default;
     };
 }

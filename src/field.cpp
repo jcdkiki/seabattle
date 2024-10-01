@@ -9,7 +9,7 @@
 #include <utility>
 
 namespace seabattle {
-    void Field::CreateJunk(vec2 size)
+    Field::Field(vec2 size) : ship_manager()
     {
         if (size.x < 0 || size.y < 0) {
             throw std::invalid_argument("invalid field size");
@@ -22,11 +22,6 @@ namespace seabattle {
         }
 
         this->size = size;
-    }
-
-    Field::Field(vec2 size) : ship_manager()
-    {
-        this->CreateJunk(size);
         for (size_t i = 0; i < size.x * size.y; i++) {
             data[i] = State::UNKNOWN;
         }
@@ -34,7 +29,18 @@ namespace seabattle {
 
     Field &Field::operator=(const Field &field)
     {
-        this->CreateJunk(size);
+        if (field.size.x < 0 || field.size.y < 0) {
+            throw std::invalid_argument("invalid field size");
+        }
+
+        if (field.size.x == 0 || field.size.y == 0) {
+            this->data = nullptr;
+        } else {
+            this->data = new State[field.size.x * field.size.y];
+        }
+
+        this->size = field.size;
+        
         ship_manager = ShipManager();
         memcpy(this->data, field.data, sizeof(State) * size.x * size.y);
         return *this;
@@ -64,15 +70,15 @@ namespace seabattle {
           size(std::exchange(field.size, vec2(0, 0)))
     {}
 
-    bbox2 Field::GetBoundingBox() const
+    bbox2 Field::getBoundingBox() const
     {
         return bbox2(vec2(0, 0), size);
     }
 
-    void Field::CreateShip(vec2 position, size_t size, Ship::Orientation orientation, bool is_visible)
+    void Field::createShip(vec2 position, size_t size, Ship::Orientation orientation, bool is_visible)
     {
-        bbox2 ship_bbox = Ship::GetBoundingBox(position, size, orientation);
-        bbox2 field_bbox = this->GetBoundingBox();
+        bbox2 ship_bbox = Ship::getBoundingBox(position, size, orientation);
+        bbox2 field_bbox = this->getBoundingBox();
 
         if (!field_bbox.contains(ship_bbox)) {
             throw std::invalid_argument("Ship is located outsie the field");
@@ -82,48 +88,48 @@ namespace seabattle {
         ship_bbox.max += vec2(1, 1);
 
         for (const Ship &ship : ship_manager) {
-            if (ship.GetBoundingBox().intersects(ship_bbox)) {
+            if (ship.getBoundingBox().intersects(ship_bbox)) {
                 throw std::invalid_argument("Ship intersects area that need to be free");
             }
         }
 
-        ship_manager.CreateShip(position, size, orientation);
+        ship_manager.createShip(position, size, orientation);
 
         if (is_visible) {
             vec2 delta = (orientation == Ship::Orientation::HORIZONTAL) ? vec2(1, 0) : vec2(0, 1);
             vec2 cur_position = position;
 
             for (int i = 0; i < size; i++) {
-                this->At(cur_position) = State::FULL_SHIP;
+                this->at(cur_position) = State::FULL_SHIP;
                 cur_position += delta;
             }
         }
     }
 
-    void Field::Render() const
+    void Field::render() const
     {
         glLoadIdentity();      
         glBegin(GL_TRIANGLES);
         for (size_t y = 0; y < size.y; y++) {
             for (size_t x = 0; x < size.x; x++) {
-                switch (this->At(vec2(x, y))) {
+                switch (this->at(vec2(x, y))) {
                     case State::UNKNOWN:
-                        glColor3ub(colors::Fog.r, colors::Fog.g, colors::Fog.b);
+                        glColor3ub(colors::FOG.r, colors::FOG.g, colors::FOG.b);
                         break;
                     case State::EMPTY:
-                        glColor3ub(colors::Water.r, colors::Water.g, colors::Water.b);
+                        glColor3ub(colors::WATER.r, colors::WATER.g, colors::WATER.b);
                         break;
                     case State::FULL_SHIP:
-                        glColor3ub(colors::Full.r, colors::Full.g, colors::Full.b);
+                        glColor3ub(colors::FULL.r, colors::FULL.g, colors::FULL.b);
                         break;
                     case State::DAMAGED_SHIP:
-                        glColor3ub(colors::Damaged.r, colors::Damaged.g, colors::Damaged.b);
+                        glColor3ub(colors::DAMAGED.r, colors::DAMAGED.g, colors::DAMAGED.b);
                         break;
                     case State::DESTROYED_SHIP:
-                        glColor3ub(colors::Destroyed.r, colors::Destroyed.g, colors::Destroyed.b);
+                        glColor3ub(colors::DESTROYED.r, colors::DESTROYED.g, colors::DESTROYED.b);
                         break;
                     default:
-                        glColor3ub(colors::Error.r, colors::Error.g, colors::Error.b);
+                        glColor3ub(colors::ERROR.r, colors::ERROR.g, colors::ERROR.b);
                         break;
                 }
 
@@ -152,16 +158,16 @@ namespace seabattle {
         glEnd();
     }
 
-    void Field::CoverInFog()
+    void Field::coverInFog()
     {
         for (size_t i = 0; i < size.x * size.y; i++) {
             data[i] = State::UNKNOWN;
         }
     }
 
-    int Field::GetNumberOfAvailibleShips(size_t size) const
+    int Field::getAvailibleShipsCount(size_t size) const
     {
-        return ship_manager.GetNumberOfAvailibleShips(size);
+        return ship_manager.getAvailibleShipsCount(size);
     }
 
     Field::~Field()
@@ -170,7 +176,7 @@ namespace seabattle {
             delete [] data;
     }
 
-    Field::State Field::SegmentStateToCellState(Ship::SegmentState state)
+    Field::State Field::segmentStateToCellState(Ship::SegmentState state)
     {
         switch (state) {
             case Ship::SegmentState::FULL:
@@ -182,21 +188,21 @@ namespace seabattle {
         }
     }
 
-    void Field::Attack(vec2 coordinates)
+    void Field::attack(vec2 coordinates)
     {
         Ship::Iterator it = ship_manager[coordinates];
         if (it) {
-            it.Damage();
-            this->At(coordinates) = SegmentStateToCellState(*it);
+            it.damage();
+            this->at(coordinates) = segmentStateToCellState(*it);
             return;   
         }
 
-        this->At(coordinates) = State::EMPTY;
+        this->at(coordinates) = State::EMPTY;
     }
 
-    Field::State &Field::At(vec2 coordinates) const
+    Field::State &Field::at(vec2 coordinates) const
     {
-        if (!this->GetBoundingBox().contains(coordinates)) {
+        if (!this->getBoundingBox().contains(coordinates)) {
             throw std::invalid_argument("invalid coordinates");
         }
         return data[coordinates.x + coordinates.y * size.x];

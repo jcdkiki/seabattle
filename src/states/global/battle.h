@@ -10,8 +10,8 @@ namespace seabattle {
         vec2 cursor;
     public:
         BattleState(GlobalState &global);
-        virtual void OnKeyDown(sf::Keyboard::Key key) override;
-        virtual void Render() override;
+        virtual void onKeyDown(sf::Keyboard::Key key) override;
+        virtual void render() override;
         virtual ~BattleState() = default;
     };
 }

@@ -6,7 +6,7 @@ namespace seabattle {
     Ship::Ship(vec2 position, size_t size, Orientation orientation)
         : position(position), size(size), orientation(orientation)
     {
-        if (size > max_size || size == 0) {
+        if (size > MAX_SIZE || size == 0) {
             throw std::invalid_argument("Invalid ship size");
         }
 
@@ -15,7 +15,7 @@ namespace seabattle {
         }
     }
 
-    void Ship::DamageSegment(size_t index)
+    void Ship::damageSegment(size_t index)
     {
         if (index >= size) {
             throw std::invalid_argument("Index is too large");
@@ -39,7 +39,7 @@ namespace seabattle {
 
     Ship::Iterator Ship::operator[](vec2 position)
     {
-        if (!this->GetBoundingBox().contains(position)) {
+        if (!this->getBoundingBox().contains(position)) {
             return Iterator(nullptr, 0);
         }
         
