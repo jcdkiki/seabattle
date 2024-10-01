@@ -49,6 +49,13 @@ cmake_ninja_workdir = /home/jcdkiki/code/oop/lb1/build/
 
 build cmake_object_order_depends_target_seabattle: phony || CMakeFiles/seabattle.dir
 
+build CMakeFiles/seabattle.dir/src/field.cpp.o: CXX_COMPILER__seabattle_Debug /home/jcdkiki/code/oop/lb1/src/field.cpp || cmake_object_order_depends_target_seabattle
+  DEP_FILE = CMakeFiles/seabattle.dir/src/field.cpp.o.d
+  FLAGS = -g -std=gnu++17
+  INCLUDES = -I/home/jcdkiki/code/oop/lb1/seabattle -I/home/jcdkiki/code/oop/lb1/src
+  OBJECT_DIR = CMakeFiles/seabattle.dir
+  OBJECT_FILE_DIR = CMakeFiles/seabattle.dir/src
+
 build CMakeFiles/seabattle.dir/src/game.cpp.o: CXX_COMPILER__seabattle_Debug /home/jcdkiki/code/oop/lb1/src/game.cpp || cmake_object_order_depends_target_seabattle
   DEP_FILE = CMakeFiles/seabattle.dir/src/game.cpp.o.d
   FLAGS = -g -std=gnu++17
@@ -77,19 +84,33 @@ build CMakeFiles/seabattle.dir/src/ship_manager.cpp.o: CXX_COMPILER__seabattle_D
   OBJECT_DIR = CMakeFiles/seabattle.dir
   OBJECT_FILE_DIR = CMakeFiles/seabattle.dir/src
 
-build CMakeFiles/seabattle.dir/src/states/placing.cpp.o: CXX_COMPILER__seabattle_Debug /home/jcdkiki/code/oop/lb1/src/states/placing.cpp || cmake_object_order_depends_target_seabattle
-  DEP_FILE = CMakeFiles/seabattle.dir/src/states/placing.cpp.o.d
+build CMakeFiles/seabattle.dir/src/states/global.cpp.o: CXX_COMPILER__seabattle_Debug /home/jcdkiki/code/oop/lb1/src/states/global.cpp || cmake_object_order_depends_target_seabattle
+  DEP_FILE = CMakeFiles/seabattle.dir/src/states/global.cpp.o.d
   FLAGS = -g -std=gnu++17
   INCLUDES = -I/home/jcdkiki/code/oop/lb1/seabattle -I/home/jcdkiki/code/oop/lb1/src
   OBJECT_DIR = CMakeFiles/seabattle.dir
   OBJECT_FILE_DIR = CMakeFiles/seabattle.dir/src/states
 
-build CMakeFiles/seabattle.dir/src/states/welcome.cpp.o: CXX_COMPILER__seabattle_Debug /home/jcdkiki/code/oop/lb1/src/states/welcome.cpp || cmake_object_order_depends_target_seabattle
-  DEP_FILE = CMakeFiles/seabattle.dir/src/states/welcome.cpp.o.d
+build CMakeFiles/seabattle.dir/src/states/global/battle.cpp.o: CXX_COMPILER__seabattle_Debug /home/jcdkiki/code/oop/lb1/src/states/global/battle.cpp || cmake_object_order_depends_target_seabattle
+  DEP_FILE = CMakeFiles/seabattle.dir/src/states/global/battle.cpp.o.d
   FLAGS = -g -std=gnu++17
   INCLUDES = -I/home/jcdkiki/code/oop/lb1/seabattle -I/home/jcdkiki/code/oop/lb1/src
   OBJECT_DIR = CMakeFiles/seabattle.dir
-  OBJECT_FILE_DIR = CMakeFiles/seabattle.dir/src/states
+  OBJECT_FILE_DIR = CMakeFiles/seabattle.dir/src/states/global
+
+build CMakeFiles/seabattle.dir/src/states/global/placing.cpp.o: CXX_COMPILER__seabattle_Debug /home/jcdkiki/code/oop/lb1/src/states/global/placing.cpp || cmake_object_order_depends_target_seabattle
+  DEP_FILE = CMakeFiles/seabattle.dir/src/states/global/placing.cpp.o.d
+  FLAGS = -g -std=gnu++17
+  INCLUDES = -I/home/jcdkiki/code/oop/lb1/seabattle -I/home/jcdkiki/code/oop/lb1/src
+  OBJECT_DIR = CMakeFiles/seabattle.dir
+  OBJECT_FILE_DIR = CMakeFiles/seabattle.dir/src/states/global
+
+build CMakeFiles/seabattle.dir/src/states/global/welcome.cpp.o: CXX_COMPILER__seabattle_Debug /home/jcdkiki/code/oop/lb1/src/states/global/welcome.cpp || cmake_object_order_depends_target_seabattle
+  DEP_FILE = CMakeFiles/seabattle.dir/src/states/global/welcome.cpp.o.d
+  FLAGS = -g -std=gnu++17
+  INCLUDES = -I/home/jcdkiki/code/oop/lb1/seabattle -I/home/jcdkiki/code/oop/lb1/src
+  OBJECT_DIR = CMakeFiles/seabattle.dir
+  OBJECT_FILE_DIR = CMakeFiles/seabattle.dir/src/states/global
 
 
 # =============================================================================
@@ -99,7 +120,7 @@ build CMakeFiles/seabattle.dir/src/states/welcome.cpp.o: CXX_COMPILER__seabattle
 #############################################
 # Link the executable seabattle
 
-build seabattle: CXX_EXECUTABLE_LINKER__seabattle_Debug CMakeFiles/seabattle.dir/src/game.cpp.o CMakeFiles/seabattle.dir/src/main.cpp.o CMakeFiles/seabattle.dir/src/ship.cpp.o CMakeFiles/seabattle.dir/src/ship_manager.cpp.o CMakeFiles/seabattle.dir/src/states/placing.cpp.o CMakeFiles/seabattle.dir/src/states/welcome.cpp.o | /usr/lib/x86_64-linux-gnu/libGLX.so /usr/lib/x86_64-linux-gnu/libOpenGL.so
+build seabattle: CXX_EXECUTABLE_LINKER__seabattle_Debug CMakeFiles/seabattle.dir/src/field.cpp.o CMakeFiles/seabattle.dir/src/game.cpp.o CMakeFiles/seabattle.dir/src/main.cpp.o CMakeFiles/seabattle.dir/src/ship.cpp.o CMakeFiles/seabattle.dir/src/ship_manager.cpp.o CMakeFiles/seabattle.dir/src/states/global.cpp.o CMakeFiles/seabattle.dir/src/states/global/battle.cpp.o CMakeFiles/seabattle.dir/src/states/global/placing.cpp.o CMakeFiles/seabattle.dir/src/states/global/welcome.cpp.o | /usr/lib/x86_64-linux-gnu/libGLX.so /usr/lib/x86_64-linux-gnu/libOpenGL.so
   FLAGS = -g
   LINK_LIBRARIES = -lsfml-graphics  -lsfml-window  -lsfml-system  /usr/lib/x86_64-linux-gnu/libGLX.so  /usr/lib/x86_64-linux-gnu/libOpenGL.so
   OBJECT_DIR = CMakeFiles/seabattle.dir
@@ -160,34 +181,6 @@ build src/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
 build src/rebuild_cache: phony src/CMakeFiles/rebuild_cache.util
 
 # =============================================================================
-# Write statements declared in CMakeLists.txt:
-# /home/jcdkiki/code/oop/lb1/src/CMakeLists.txt
-# =============================================================================
-
-
-#############################################
-# Utility command for edit_cache
-
-build src/states/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/jcdkiki/code/oop/lb1/build/src/states && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-  DESC = No interactive CMake dialog available...
-  restat = 1
-
-build src/states/edit_cache: phony src/states/CMakeFiles/edit_cache.util
-
-
-#############################################
-# Utility command for rebuild_cache
-
-build src/states/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/jcdkiki/code/oop/lb1/build/src/states && /usr/bin/cmake --regenerate-during-build -S/home/jcdkiki/code/oop/lb1 -B/home/jcdkiki/code/oop/lb1/build
-  DESC = Running CMake to regenerate build system...
-  pool = console
-  restat = 1
-
-build src/states/rebuild_cache: phony src/states/CMakeFiles/rebuild_cache.util
-
-# =============================================================================
 # Target aliases.
 
 # =============================================================================
@@ -205,14 +198,7 @@ build all: phony seabattle src/all
 #############################################
 # Folder: /home/jcdkiki/code/oop/lb1/build/src
 
-build src/all: phony src/states/all
-
-# =============================================================================
-
-#############################################
-# Folder: /home/jcdkiki/code/oop/lb1/build/src/states
-
-build src/states/all: phony
+build src/all: phony
 
 # =============================================================================
 # Built-in targets
@@ -221,14 +207,14 @@ build src/states/all: phony
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | /home/jcdkiki/code/oop/lb1/CMakeLists.txt /home/jcdkiki/code/oop/lb1/src/CMakeLists.txt /home/jcdkiki/code/oop/lb1/src/states/CMakeLists.txt /usr/share/cmake-3.25/Modules/CMakeCInformation.cmake /usr/share/cmake-3.25/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.25/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.25/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.25/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.25/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.25/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.25/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.25/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.25/Modules/Compiler/Clang-C.cmake /usr/share/cmake-3.25/Modules/Compiler/Clang-CXX.cmake /usr/share/cmake-3.25/Modules/Compiler/Clang.cmake /usr/share/cmake-3.25/Modules/Compiler/GNU.cmake /usr/share/cmake-3.25/Modules/FindOpenGL.cmake /usr/share/cmake-3.25/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.25/Modules/FindPackageMessage.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-Clang-C.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-Clang-CXX.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.25/Modules/Platform/Linux.cmake /usr/share/cmake-3.25/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.25.1/CMakeCCompiler.cmake CMakeFiles/3.25.1/CMakeCXXCompiler.cmake CMakeFiles/3.25.1/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | /home/jcdkiki/code/oop/lb1/CMakeLists.txt /home/jcdkiki/code/oop/lb1/src/CMakeLists.txt /usr/share/cmake-3.25/Modules/CMakeCInformation.cmake /usr/share/cmake-3.25/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.25/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.25/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.25/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.25/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.25/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.25/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.25/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.25/Modules/Compiler/Clang-C.cmake /usr/share/cmake-3.25/Modules/Compiler/Clang-CXX.cmake /usr/share/cmake-3.25/Modules/Compiler/Clang.cmake /usr/share/cmake-3.25/Modules/Compiler/GNU.cmake /usr/share/cmake-3.25/Modules/FindOpenGL.cmake /usr/share/cmake-3.25/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.25/Modules/FindPackageMessage.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-Clang-C.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-Clang-CXX.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.25/Modules/Platform/Linux.cmake /usr/share/cmake-3.25/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.25.1/CMakeCCompiler.cmake CMakeFiles/3.25.1/CMakeCXXCompiler.cmake CMakeFiles/3.25.1/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build /home/jcdkiki/code/oop/lb1/CMakeLists.txt /home/jcdkiki/code/oop/lb1/src/CMakeLists.txt /home/jcdkiki/code/oop/lb1/src/states/CMakeLists.txt /usr/share/cmake-3.25/Modules/CMakeCInformation.cmake /usr/share/cmake-3.25/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.25/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.25/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.25/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.25/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.25/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.25/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.25/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.25/Modules/Compiler/Clang-C.cmake /usr/share/cmake-3.25/Modules/Compiler/Clang-CXX.cmake /usr/share/cmake-3.25/Modules/Compiler/Clang.cmake /usr/share/cmake-3.25/Modules/Compiler/GNU.cmake /usr/share/cmake-3.25/Modules/FindOpenGL.cmake /usr/share/cmake-3.25/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.25/Modules/FindPackageMessage.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-Clang-C.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-Clang-CXX.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.25/Modules/Platform/Linux.cmake /usr/share/cmake-3.25/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.25.1/CMakeCCompiler.cmake CMakeFiles/3.25.1/CMakeCXXCompiler.cmake CMakeFiles/3.25.1/CMakeSystem.cmake: phony
+build /home/jcdkiki/code/oop/lb1/CMakeLists.txt /home/jcdkiki/code/oop/lb1/src/CMakeLists.txt /usr/share/cmake-3.25/Modules/CMakeCInformation.cmake /usr/share/cmake-3.25/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.25/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.25/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.25/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.25/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.25/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.25/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.25/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.25/Modules/Compiler/Clang-C.cmake /usr/share/cmake-3.25/Modules/Compiler/Clang-CXX.cmake /usr/share/cmake-3.25/Modules/Compiler/Clang.cmake /usr/share/cmake-3.25/Modules/Compiler/GNU.cmake /usr/share/cmake-3.25/Modules/FindOpenGL.cmake /usr/share/cmake-3.25/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.25/Modules/FindPackageMessage.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-Clang-C.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-Clang-CXX.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.25/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.25/Modules/Platform/Linux.cmake /usr/share/cmake-3.25/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.25.1/CMakeCCompiler.cmake CMakeFiles/3.25.1/CMakeCXXCompiler.cmake CMakeFiles/3.25.1/CMakeSystem.cmake: phony
 
 
 #############################################

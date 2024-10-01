@@ -1,24 +1,25 @@
 #ifndef SEABATTLE_STATES_WELCOME_H_
 #define SEABATTLE_STATES_WELCOME_H_
 
-#include "game.h"
+#include <SFML/Graphics/Text.hpp>
+
+#include "states/global.h"
 #include "vec2.h"
 
 namespace seabattle {
-    class WelcomeGameState : public GameState {
+    class WelcomeState : public GlobalState::Substate {
+        GlobalState &global;
         vec2 field_size;
         bool is_width_done;
 
-        sf::Text help_text;
         sf::Text field_size_text;
 
-        void CreateField();
-
+        bool CreateField();
     public:
-        WelcomeGameState(Game &game);
+        WelcomeState(GlobalState &global);
         virtual void OnKeyDown(sf::Keyboard::Key key) override;
         virtual void Render() override;
-        virtual ~WelcomeGameState() = default;
+        virtual ~WelcomeState() = default;
     };
 }
 

@@ -1,13 +1,12 @@
 #include "ship.h"
 
-#include <optional>
 #include <stdexcept>
 
 namespace seabattle {
     Ship::Ship(vec2 position, size_t size, Orientation orientation)
         : position(position), size(size), orientation(orientation)
     {
-        if (size >= max_size || size == 0) {
+        if (size > max_size || size == 0) {
             throw std::invalid_argument("Invalid ship size");
         }
 
@@ -38,20 +37,10 @@ namespace seabattle {
         segments[index] = new_state;
     }
 
-    /*
-    Ship::SegmentState Ship::GetSegmentState(size_t index) const
-    {
-        if (index >= size) {
-            throw std::invalid_argument("Index is too large");
-        }
-        return segments[index];
-    }
-    */
-
-    std::optional<Ship::Iterator> Ship::operator[](vec2 position)
+    Ship::Iterator Ship::operator[](vec2 position)
     {
         if (!this->GetBoundingBox().contains(position)) {
-            return std::nullopt;
+            return Iterator(nullptr, 0);
         }
         
         size_t index;
@@ -60,6 +49,6 @@ namespace seabattle {
         else
             index = position.y - this->position.y;
         
-        return std::optional<Iterator>{Iterator(*this, index)};
+        return Iterator(this, index);
     }
 }

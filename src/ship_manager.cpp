@@ -1,9 +1,10 @@
 #include "ship_manager.h"
-#include <optional>
+
 #include <stdexcept>
 
 namespace seabattle {
     ShipManager::ShipManager(std::initializer_list<size_t> ship_size_list)
+        : ship_size_cnt()
     {
         for (size_t size : ship_size_list) {
             if (size == 0 || size > Ship::max_size) {
@@ -23,18 +24,18 @@ namespace seabattle {
             throw std::invalid_argument("Maximum amount of ships this big already created");
         }
 
-        ship_size_cnt[size - 1]--;
         ships.emplace_back(position, size, orientation);
+        ship_size_cnt[size - 1]--;
     }
 
-    std::optional<Ship::Iterator> ShipManager::operator[](vec2 position)
+    Ship::Iterator ShipManager::operator[](vec2 position)
     {
         for (Ship &ship : ships) {
-            std::optional<Ship::Iterator> it = ship[position];
+            Ship::Iterator it = ship[position];
             if (it) {
                 return it;
             }
         }
-        return std::nullopt;
+        return Ship::Iterator();
     }
 }

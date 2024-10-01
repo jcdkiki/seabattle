@@ -1,35 +1,26 @@
 #include "game.h"
 
-#include <SFML/OpenGL.hpp>
-#include "states/placing.h"
+#include <GL/gl.h>
+#include <SFML/Graphics/RenderWindow.hpp> 
+#include <SFML/Window/ContextSettings.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Window/VideoMode.hpp>
+#include <SFML/Window/WindowStyle.hpp>
 
 namespace seabattle {
     Game::Game()
-        : window(sf::VideoMode(640, 480), "Seabattle", sf::Style::Titlebar),
-          state(new PlacingGameState(*this)),
-          field(vec2(0, 0))
+        : window(sf::VideoMode(640, 480), "Seabattle", sf::Style::Titlebar, sf::ContextSettings(0, 0, 0, 4, 5)),
+          state(window)
     {
-        if (!font.loadFromFile("assets/font.ttf")) {
-            throw std::runtime_error("Failed to load assets/font.ttf");
-        }
-
-        glViewport(0, 0, 640, 480);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(0.0, 640, 480, 0.0, -1.0, 1.0);
+        glOrtho(0, 640, 480, 0, 0, 100);
         glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
     }
 
     void Game::MainLoop()
     {
-        sf::Text text;
-        text.setFont(font);
-
-        text.setString("Welcome to Seabattle");
-        text.setCharacterSize(16);
-        text.setFillColor(sf::Color::White);
-        text.setPosition(sf::Vector2f(10.f, 10.f));
-
         while (window.isOpen()) {
             sf::Event event;
             
@@ -39,23 +30,16 @@ namespace seabattle {
                         window.close();
                         break;
                     case sf::Event::KeyPressed:
-                        state->OnKeyDown(event.key.code);
+                        state.OnKeyDown(event.key.code);
                         break;
                     default:
                         break;
                 }
             }
 
-            glClearColor(0, 0, 0, 1);
-            glClear(GL_COLOR_BUFFER_BIT);
+            state.Render();
             
-            window.draw(text);
             window.display();
         }
     };
-
-    void Game::ChangeState(GameState *new_state)
-    {
-        state = std::unique_ptr<GameState>(new_state);
-    }
 }

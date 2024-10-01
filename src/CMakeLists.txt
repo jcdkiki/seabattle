@@ -1,4 +1,2 @@
-file(GLOB SRCFILES "*.cpp")
+file(GLOB_RECURSE SRCFILES "*.cpp")
 target_sources(seabattle PRIVATE ${SRCFILES})
-
-add_subdirectory(states)

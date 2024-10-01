@@ -1,15 +1,13 @@
 #ifndef SEABATTLE_POINT_H_
 #define SEABATTLE_POINT_H_
 
-#include <cstddef>
-
 namespace seabattle {
     struct vec2 {
-        size_t x;
-        size_t y;
+        int x;
+        int y;
 
-        vec2() : x(0), y(0) {}
-        vec2(size_t x, size_t y) : x(x), y(y) {}
+        constexpr vec2() : x(0), y(0) {}
+        constexpr vec2(int x, int y) : x(x), y(y) {}
 
         inline vec2 operator+(vec2 v) const { return vec2(x + v.x, y + v.y); }
         inline vec2 operator-(vec2 v) const { return vec2(x - v.x, y - v.y); }
@@ -22,8 +20,8 @@ namespace seabattle {
         vec2 min;
         vec2 max;
 
-        bbox2() : min(), max() {}
-        bbox2(vec2 min, vec2 max) : min(min), max(max) {}
+        constexpr bbox2() : min(), max() {}
+        constexpr bbox2(vec2 min, vec2 max) : min(min), max(max) {}
 
         inline bool contains(vec2 point) const
         {
