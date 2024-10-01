@@ -3,7 +3,6 @@
 #include "ship_manager.h"
 #include "colors.h"
 
-#include <memory>
 #include <stdexcept>
 #include <cstring>
 #include <GL/gl.h>
