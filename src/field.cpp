@@ -3,63 +3,37 @@
 #include "ship_manager.h"
 #include "colors.h"
 
+#include <memory>
 #include <stdexcept>
 #include <cstring>
 #include <GL/gl.h>
 #include <utility>
 
 namespace seabattle {
-    Field::Field(vec2 size) : ship_manager()
+    Field::Field(int width, int height)
+        : ship_manager(),
+          size(width, height)
     {
-        if (size.x < 0 || size.y < 0) {
+        if (width < 0 || height < 0) {
             throw std::invalid_argument("invalid field size");
         }
 
-        if (size.x == 0 || size.y == 0) {
-            this->data = nullptr;
-        } else {
-            this->data = new State[size.x * size.y];
+        if (width != 0 && height != 0) {
+            this->data = new State[width * height];
         }
+        else {
+            this->data = nullptr;
+        }
+    }
 
-        this->size = size;
+    Field::Field(vec2 size) : Field(size.x, size.y)
+    {
         for (size_t i = 0; i < size.x * size.y; i++) {
             data[i] = State::UNKNOWN;
         }
     }
 
-    Field &Field::operator=(const Field &field)
-    {
-        if (field.size.x < 0 || field.size.y < 0) {
-            throw std::invalid_argument("invalid field size");
-        }
-
-        if (field.size.x == 0 || field.size.y == 0) {
-            this->data = nullptr;
-        } else {
-            this->data = new State[field.size.x * field.size.y];
-        }
-
-        this->size = field.size;
-        
-        ship_manager = ShipManager();
-        memcpy(this->data, field.data, sizeof(State) * size.x * size.y);
-        return *this;
-    }
-
-    Field &Field::operator=(Field &&field)
-    {
-        data = field.data;
-        size = field.size;
-        ship_manager = field.ship_manager;
-
-        field.data = nullptr;
-        field.size = vec2(0, 0);
-        field.ship_manager = ShipManager();
-
-        return *this;
-    }
-
-    Field::Field(const Field &field) : Field(field.size)
+    Field::Field(const Field &field) : Field(field.size.x, field.size.y)
     {
         memcpy(this->data, field.data, sizeof(State) * size.x * size.y);
     }
@@ -69,6 +43,29 @@ namespace seabattle {
           data(std::exchange(field.data, nullptr)),
           size(std::exchange(field.size, vec2(0, 0)))
     {}
+
+    Field &Field::operator=(const Field &field)
+    {
+        ship_manager = field.ship_manager;
+        size = field.size;
+        
+        data = new State[size.x * size.y];
+        memcpy(data, field.data, sizeof(State) * size.x * size.y);
+        return *this;
+    }
+
+    Field &Field::operator=(Field &&field)
+    {
+        data = field.data;
+        size = field.size;
+        ship_manager = std::move(field.ship_manager);
+
+        field.data = nullptr;
+        field.size = vec2(0, 0);
+        field.ship_manager = ShipManager();
+
+        return *this;
+    }
 
     bbox2 Field::getBoundingBox() const
     {

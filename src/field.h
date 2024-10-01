@@ -1,6 +1,8 @@
 #ifndef SEABATTLE_FIELD_H_
 #define SEABATTLE_FIELD_H_
 
+#include <memory>
+
 #include "vec2.h"
 #include "ship_manager.h"
 #include "ship.h"
@@ -23,7 +25,8 @@ namespace seabattle {
         static Field::State segmentStateToCellState(Ship::SegmentState state);
 
         State &at(vec2 coordinates) const;
-
+        Field(int width, int height);
+        
     public:
         static constexpr vec2 cell_size{16, 16};
         static constexpr vec2 field_position{10, 70};
