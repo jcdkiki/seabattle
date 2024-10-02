@@ -3,13 +3,16 @@
 #include "ship_manager.h"
 #include "colors.h"
 
+#include <algorithm>
 #include <stdexcept>
 #include <cstring>
 #include <GL/gl.h>
 #include <utility>
 
 namespace seabattle {
-    Field::Field(int width, int height) : size(width, height)
+    Field::Field(int width, int height)
+        : size(width, height),
+          ships()
     {
         if (width < 0 || height < 0) {
             throw std::invalid_argument("invalid field size");
@@ -32,16 +35,19 @@ namespace seabattle {
 
     Field::Field(const Field &field) : Field(field.size.x, field.size.y)
     {
+        ships = field.ships;
         memcpy(this->data, field.data, sizeof(State) * size.x * size.y);
     }
 
-    Field::Field(Field &&field) :
+    Field::Field(Field &&field)
+        : ships(std::move(field.ships)),
           data(std::exchange(field.data, nullptr)),
           size(std::exchange(field.size, vec2(0, 0)))
     {}
 
     Field &Field::operator=(const Field &field)
     {
+        ships = field.ships;
         size = field.size;
         data = new State[size.x * size.y];
         memcpy(data, field.data, sizeof(State) * size.x * size.y);
@@ -50,12 +56,22 @@ namespace seabattle {
 
     Field &Field::operator=(Field &&field)
     {
+        ships = std::move(field.ships);
         data = field.data;
         size = field.size;
         field.data = nullptr;
         field.size = vec2(0, 0);
+        field.ships = std::vector<Entry>();
 
         return *this;
+    }
+
+    bbox2 Field::getShipBoundingBox(const Ship &ship, vec2 position, Ship::Orientation orientation)
+    {
+        if (orientation == Ship::Orientation::HORIZONTAL)
+            return bbox2(position, position + vec2(ship.getSize(), 1));
+        else
+            return bbox2(position, position + vec2(1, ship.getSize()));
     }
 
     bbox2 Field::getBoundingBox() const
@@ -63,9 +79,22 @@ namespace seabattle {
         return bbox2(vec2(0, 0), size);
     }
 
-    void Field::createShip(ShipManager &ship_manager, vec2 position, size_t size, Ship::Orientation orientation, bool is_visible)
+    Ship::Iterator Field::getShipIterator(vec2 coordinates) const
     {
-        bbox2 ship_bbox = Ship::getBoundingBox(position, size, orientation);
+        for (const Entry &entry : ships) {
+            bbox2 ship_bbox = getShipBoundingBox(entry.ship, entry.position, entry.orientation);
+            if (ship_bbox.contains(coordinates)) {
+                vec2 index2d = coordinates - entry.position;
+                return Ship::Iterator(&entry.ship, std::max(index2d.x, index2d.y));
+            }
+        }
+
+        return Ship::Iterator();
+    }
+
+    void Field::addShip(Ship &ship, vec2 position, Ship::Orientation orientation, bool is_visible)
+    {
+        bbox2 ship_bbox = getShipBoundingBox(ship, position, orientation);
         bbox2 field_bbox = this->getBoundingBox();
 
         if (!field_bbox.contains(ship_bbox)) {
@@ -75,20 +104,21 @@ namespace seabattle {
         ship_bbox.min -= vec2(1, 1);
         ship_bbox.max += vec2(1, 1);
 
-        for (const Ship &ship : ship_manager) {
-            if (ship.getBoundingBox().intersects(ship_bbox)) {
+        for (const Entry &entry : ships) {
+            bbox2 entry_bbox = getShipBoundingBox(entry.ship, entry.position, entry.orientation);
+            if (entry_bbox.intersects(ship_bbox)) {
                 throw std::invalid_argument("Ship intersects area that need to be free");
             }
         }
 
-        ship_manager.createShip(position, size, orientation);
+        ships.push_back(Entry{ position, orientation, ship });
 
         if (is_visible) {
             vec2 delta = (orientation == Ship::Orientation::HORIZONTAL) ? vec2(1, 0) : vec2(0, 1);
             vec2 cur_position = position;
 
-            for (int i = 0; i < size; i++) {
-                this->at(cur_position) = State::FULL_SHIP;
+            for (int i = 0; i < ship.getSize(); i++) {
+                this->getCellState(cur_position) = State::FULL_SHIP;
                 cur_position += delta;
             }
         }
@@ -100,7 +130,7 @@ namespace seabattle {
         glBegin(GL_TRIANGLES);
         for (size_t y = 0; y < size.y; y++) {
             for (size_t x = 0; x < size.x; x++) {
-                switch (this->at(vec2(x, y))) {
+                switch (this->getCellState(vec2(x, y))) {
                     case State::UNKNOWN:
                         glColor3ub(colors::FOG.r, colors::FOG.g, colors::FOG.b);
                         break;
@@ -171,19 +201,19 @@ namespace seabattle {
         }
     }
 
-    void Field::attack(ShipManager &ship_manager, vec2 coordinates)
+    void Field::attack(vec2 coordinates)
     {
-        Ship::Iterator it = ship_manager[coordinates];
+        Ship::Iterator it = this->getShipIterator(coordinates);
         if (it) {
             it.damage();
-            this->at(coordinates) = segmentStateToCellState(*it);
-            return;   
+            this->getCellState(coordinates) = segmentStateToCellState(*it);
+            return;
         }
 
-        this->at(coordinates) = State::EMPTY;
+        this->getCellState(coordinates) = State::EMPTY;
     }
 
-    Field::State &Field::at(vec2 coordinates) const
+    Field::State &Field::getCellState(vec2 coordinates) const
     {
         if (!this->getBoundingBox().contains(coordinates)) {
             throw std::invalid_argument("invalid coordinates");

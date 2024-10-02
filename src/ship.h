@@ -3,8 +3,6 @@
 
 #include <cstddef>
 
-#include "vec2.h"
-
 namespace seabattle {
     class Ship {
     public:
@@ -22,10 +20,8 @@ namespace seabattle {
         };
 
     private:
-        vec2 position;
         size_t size;
         SegmentState segments[MAX_SIZE];
-        Orientation orientation;
 
     public:
         class Iterator {
@@ -39,22 +35,10 @@ namespace seabattle {
             inline operator bool() { return ship != nullptr; }
         };
 
-        explicit Ship(vec2 position, size_t size, Orientation orientation);
+        explicit Ship(size_t size);
         
         void damageSegment(size_t index);
-        Iterator operator[](vec2 position);
-        
-        inline bbox2 getBoundingBox() const
-        {
-            return Ship::getBoundingBox(position, size, orientation);
-        }
-
-        inline static bbox2 getBoundingBox(vec2 position, int size, Orientation orientation)
-        {
-            if (orientation == Orientation::HORIZONTAL)
-                return bbox2(position, position + vec2(size, 1));
-            return bbox2(position, position + vec2(1, size));
-        }
+        inline size_t getSize() const { return size; }
     };
 }
 

@@ -1,4 +1,5 @@
 #include "states/global/welcome.h"
+#include "ship_manager.h"
 #include "states/global/placing.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <stdexcept>
@@ -26,6 +27,7 @@ namespace seabattle {
             case sf::Keyboard::Enter:
                 try {
                     global.field = Field(field_size);
+                    global.ship_manager = ShipManager();
                 } catch (std::invalid_argument &e) {
                     global.message.setString(std::string("Error: ") + e.what());
                     return;

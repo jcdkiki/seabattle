@@ -13,11 +13,13 @@ namespace seabattle {
         : global(global),
           orientation(Ship::Orientation::HORIZONTAL),
           position(0, 0),
-          size(1)
+          current_ship(global.ship_manager.begin())
     {
         global.message.setString("Great. Now place your ships.");
-        global.title.setString("WASD - move ship | Q/E - change ship size | R - rotate ship\n"
-                               "Enter - place ship | Shift+Enter - finish");
+        global.title.setString(
+            "Place your ships\n"
+            "WASD - move ship | R - rotate ship | Enter - place ship"
+        );
     
         ship_count_text.setFont(global.font);
         ship_count_text.setCharacterSize(16);
@@ -29,12 +31,6 @@ namespace seabattle {
         switch (key) {
             case sf::Keyboard::R:
                 orientation = (orientation == Ship::Orientation::HORIZONTAL) ? Ship::Orientation::VERTICAL : Ship::Orientation::HORIZONTAL;
-                break;
-            case sf::Keyboard::E:
-                size++;
-                break;
-            case sf::Keyboard::Q:
-                size--;
                 break;
             case sf::Keyboard::A:
                 position.x--;
@@ -49,17 +45,21 @@ namespace seabattle {
                 position.y--;
                 break;
             case sf::Keyboard::Enter:
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+                try {
+                    global.field.addShip(*current_ship, position, orientation, true);
+                } catch (std::invalid_argument &e) {
+                    global.message.setString(std::string("Error: ") + e.what());
+                    return;
+                }
+
+                current_ship++;
+
+                if (current_ship == global.ship_manager.end()) {
                     global.field.coverInFog();
                     global.substate = std::make_unique<BattleState>(global);
                     return;
                 }
 
-                try {
-                    global.field.createShip(global.ship_manager, position, size, orientation, true);
-                } catch (std::invalid_argument &e) {
-                    global.message.setString(std::string("Error: ") + e.what());
-                }
                 break;
             default:
                 break;
@@ -74,7 +74,7 @@ namespace seabattle {
         glLoadIdentity();
         glBegin(GL_LINES);
         glColor3ub(255, 255, 255);
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < current_ship->getSize(); i++) {
             vec2 screen_coord = Field::field_position
                 + vec2(cur_position.x * Field::cell_size.x, cur_position.y * Field::cell_size.y);
             
@@ -86,17 +86,5 @@ namespace seabattle {
             cur_position += delta;
         }
         glEnd();
-
-        std::string ship_count_str;
-        for (int i = 1; i <= Ship::MAX_SIZE; i++) {
-            ship_count_str += 
-                std::to_string(i) + ": " +
-                std::to_string(global.ship_manager.getAvailibleShipsCount(i)) + " left  |  ";
-        }
-        ship_count_text.setString(ship_count_str);
-
-        global.window.pushGLStates();
-        global.window.draw(ship_count_text);
-        global.window.popGLStates();
     }
 }

@@ -3,8 +3,7 @@
 #include <stdexcept>
 
 namespace seabattle {
-    Ship::Ship(vec2 position, size_t size, Orientation orientation)
-        : position(position), size(size), orientation(orientation)
+    Ship::Ship(size_t size) : size(size)
     {
         if (size > MAX_SIZE || size == 0) {
             throw std::invalid_argument("Invalid ship size");
@@ -35,20 +34,5 @@ namespace seabattle {
         }
 
         segments[index] = new_state;
-    }
-
-    Ship::Iterator Ship::operator[](vec2 position)
-    {
-        if (!this->getBoundingBox().contains(position)) {
-            return Iterator(nullptr, 0);
-        }
-        
-        size_t index;
-        if (orientation == Orientation::HORIZONTAL)
-            index = position.x - this->position.x;
-        else
-            index = position.y - this->position.y;
-        
-        return Iterator(this, index);
     }
 }

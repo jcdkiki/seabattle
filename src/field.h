@@ -1,6 +1,8 @@
 #ifndef SEABATTLE_FIELD_H_
 #define SEABATTLE_FIELD_H_
 
+#include <vector>
+
 #include "vec2.h"
 #include "ship_manager.h"
 #include "ship.h"
@@ -15,13 +17,28 @@ namespace seabattle {
             DESTROYED_SHIP
         };
 
+        struct Entry {
+            vec2 position;
+            Ship::Orientation orientation;
+            Ship &ship;
+
+            inline void operator=(const Entry &entry)
+            {
+                position = entry.position;
+                orientation = entry.orientation;
+                ship = entry.ship;
+            }
+        };
+
+        std::vector<Entry> ships;
         State *data;
         vec2 size;
 
-        Field();
         static Field::State segmentStateToCellState(Ship::SegmentState state);
+        static bbox2 getShipBoundingBox(const Ship &ship, vec2 position, Ship::Orientation orientation);
 
-        State &at(vec2 coordinates) const;
+        State &getCellState(vec2 coordinates) const;
+        Ship::Iterator getShipIterator(vec2 coordinates) const;
         Field(int width, int height);
         
     public:
@@ -37,8 +54,8 @@ namespace seabattle {
         
         bbox2 getBoundingBox() const;
 
-        void attack(ShipManager &ship_manager, vec2 coordinates);
-        void createShip(ShipManager &ship_manager, vec2 position, size_t size, Ship::Orientation orientation, bool is_visible = false);
+        void attack(vec2 coordinates);
+        void addShip(Ship &ship, vec2 position, Ship::Orientation orientation, bool is_visible = false);
         void render() const;
         void coverInFog();
     };
