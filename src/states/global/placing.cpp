@@ -1,8 +1,8 @@
-#include "states/global/placing.h"
-#include "field.h"
-#include "ship.h"
-#include "states/global.h"
-#include "states/global/battle.h"
+#include "states/global/placing.hpp"
+#include "field.hpp"
+#include "ship.hpp"
+#include "states/global.hpp"
+#include "states/global/battle.hpp"
 #include <GL/gl.h>
 #include <SFML/Window/Keyboard.hpp>
 #include <stdexcept>

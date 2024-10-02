@@ -1,7 +1,6 @@
-#include "field.h"
-#include "ship.h"
-#include "ship_manager.h"
-#include "colors.h"
+#include "field.hpp"
+#include "ship.hpp"
+#include "colors.hpp"
 
 #include <algorithm>
 #include <stdexcept>
@@ -47,6 +46,10 @@ namespace seabattle {
 
     Field &Field::operator=(const Field &field)
     {
+        if (data) {
+            delete [] data;
+        }
+
         ships = field.ships;
         size = field.size;
         data = new State[size.x * size.y];
@@ -79,7 +82,7 @@ namespace seabattle {
         return bbox2(vec2(0, 0), size);
     }
 
-    Ship::Iterator Field::getShipIterator(vec2 coordinates) const
+    Ship::Iterator Field::getShipIterator(vec2 coordinates)
     {
         for (const Entry &entry : ships) {
             bbox2 ship_bbox = getShipBoundingBox(entry.ship, entry.position, entry.orientation);

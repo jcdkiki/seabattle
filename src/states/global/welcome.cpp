@@ -1,6 +1,6 @@
-#include "states/global/welcome.h"
-#include "ship_manager.h"
-#include "states/global/placing.h"
+#include "states/global/welcome.hpp"
+#include "ship_manager.hpp"
+#include "states/global/placing.hpp"
 #include <SFML/Window/Keyboard.hpp>
 #include <stdexcept>
 

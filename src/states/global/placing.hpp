@@ -1,8 +1,8 @@
 #ifndef SEABATTLE_STATES_PLACING_H_
 #define SEABATTLE_STATES_PLACING_H_
 
-#include "ship_manager.h"
-#include "states/global.h"
+#include "ship_manager.hpp"
+#include "states/global.hpp"
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Keyboard.hpp>
 

@@ -1,6 +1,6 @@
-#include "states/global.h"
-#include "colors.h"
-#include "states/global/welcome.h"
+#include "states/global.hpp"
+#include "colors.hpp"
+#include "states/global/welcome.hpp"
 #include <GL/gl.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Keyboard.hpp>

@@ -1,4 +1,4 @@
-#include "states/global/battle.h"
+#include "states/global/battle.hpp"
 
 #include <memory>
 
@@ -6,7 +6,7 @@
 #include <GL/gl.h>
 #include <stdexcept>
 
-#include "states/global/welcome.h"
+#include "states/global/welcome.hpp"
 
 namespace seabattle {
     BattleState::BattleState(GlobalState &global)

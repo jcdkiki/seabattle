@@ -3,9 +3,8 @@
 
 #include <vector>
 
-#include "vec2.h"
-#include "ship_manager.h"
-#include "ship.h"
+#include "vec2.hpp"
+#include "ship.hpp"
 
 namespace seabattle {
     class Field {
@@ -38,7 +37,7 @@ namespace seabattle {
         static bbox2 getShipBoundingBox(const Ship &ship, vec2 position, Ship::Orientation orientation);
 
         State &getCellState(vec2 coordinates) const;
-        Ship::Iterator getShipIterator(vec2 coordinates) const;
+        Ship::Iterator getShipIterator(vec2 coordinates);
         Field(int width, int height);
         
     public:

@@ -3,8 +3,8 @@
 
 #include <SFML/Graphics/Text.hpp>
 
-#include "states/global.h"
-#include "vec2.h"
+#include "states/global.hpp"
+#include "vec2.hpp"
 
 namespace seabattle {
     class WelcomeState : public GlobalState::Substate {

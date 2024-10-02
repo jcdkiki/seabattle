@@ -1,4 +1,4 @@
-#include "ship_manager.h"
+#include "ship_manager.hpp"
 
 namespace seabattle {
     ShipManager::ShipManager(std::initializer_list<size_t> ship_size_list)

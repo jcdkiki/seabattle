@@ -2,7 +2,7 @@
 #define SEABATTLE_GAME_H_
 
 #include <SFML/Graphics/RenderWindow.hpp> 
-#include "states/global.h"
+#include "states/global.hpp"
 
 namespace seabattle {
     class Game {

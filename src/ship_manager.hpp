@@ -3,7 +3,7 @@
 
 #include <list>
 
-#include "ship.h"
+#include "ship.hpp"
 
 namespace seabattle {
     class ShipManager {

@@ -8,8 +8,8 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Text.hpp>
 
-#include "field.h"
-#include "ship_manager.h"
+#include "field.hpp"
+#include "ship_manager.hpp"
 
 namespace seabattle {
     class GlobalState {

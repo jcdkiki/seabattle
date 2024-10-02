@@ -1,7 +1,7 @@
 #ifndef SEABATTLE_STATES_BATTLE_H_
 #define SEABATTLE_STATES_BATTLE_H_
 
-#include "states/global.h"
+#include "states/global.hpp"
 #include <SFML/Graphics/Text.hpp>
 
 namespace seabattle {
