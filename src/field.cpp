@@ -9,9 +9,7 @@
 #include <utility>
 
 namespace seabattle {
-    Field::Field(int width, int height)
-        : ship_manager(),
-          size(width, height)
+    Field::Field(int width, int height) : size(width, height)
     {
         if (width < 0 || height < 0) {
             throw std::invalid_argument("invalid field size");
@@ -37,17 +35,14 @@ namespace seabattle {
         memcpy(this->data, field.data, sizeof(State) * size.x * size.y);
     }
 
-    Field::Field(Field &&field)
-        : ship_manager(std::move(field.ship_manager)),
+    Field::Field(Field &&field) :
           data(std::exchange(field.data, nullptr)),
           size(std::exchange(field.size, vec2(0, 0)))
     {}
 
     Field &Field::operator=(const Field &field)
     {
-        ship_manager = field.ship_manager;
         size = field.size;
-        
         data = new State[size.x * size.y];
         memcpy(data, field.data, sizeof(State) * size.x * size.y);
         return *this;
@@ -57,11 +52,8 @@ namespace seabattle {
     {
         data = field.data;
         size = field.size;
-        ship_manager = std::move(field.ship_manager);
-
         field.data = nullptr;
         field.size = vec2(0, 0);
-        field.ship_manager = ShipManager();
 
         return *this;
     }
@@ -71,7 +63,7 @@ namespace seabattle {
         return bbox2(vec2(0, 0), size);
     }
 
-    void Field::createShip(vec2 position, size_t size, Ship::Orientation orientation, bool is_visible)
+    void Field::createShip(ShipManager &ship_manager, vec2 position, size_t size, Ship::Orientation orientation, bool is_visible)
     {
         bbox2 ship_bbox = Ship::getBoundingBox(position, size, orientation);
         bbox2 field_bbox = this->getBoundingBox();
@@ -161,11 +153,6 @@ namespace seabattle {
         }
     }
 
-    int Field::getAvailibleShipsCount(size_t size) const
-    {
-        return ship_manager.getAvailibleShipsCount(size);
-    }
-
     Field::~Field()
     {
         if (data != nullptr)
@@ -184,7 +171,7 @@ namespace seabattle {
         }
     }
 
-    void Field::attack(vec2 coordinates)
+    void Field::attack(ShipManager &ship_manager, vec2 coordinates)
     {
         Ship::Iterator it = ship_manager[coordinates];
         if (it) {

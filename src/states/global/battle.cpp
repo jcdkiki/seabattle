@@ -37,7 +37,7 @@ namespace seabattle {
                 break;
             case sf::Keyboard::Enter:
                 try {
-                    global.field.attack(cursor);
+                    global.field.attack(global.ship_manager, cursor);
                 } catch (std::invalid_argument &e) {
                     global.message.setString(std::string("Error: ") + e.what());
                 }

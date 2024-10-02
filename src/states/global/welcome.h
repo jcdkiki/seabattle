@@ -13,8 +13,7 @@ namespace seabattle {
         bool is_width_done;
 
         sf::Text field_size_text;
-
-        bool CreateField();
+        
     public:
         WelcomeState(GlobalState &global);
         virtual void onKeyDown(sf::Keyboard::Key key) override;

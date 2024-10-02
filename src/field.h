@@ -1,8 +1,6 @@
 #ifndef SEABATTLE_FIELD_H_
 #define SEABATTLE_FIELD_H_
 
-#include <memory>
-
 #include "vec2.h"
 #include "ship_manager.h"
 #include "ship.h"
@@ -19,7 +17,6 @@ namespace seabattle {
 
         State *data;
         vec2 size;
-        ShipManager ship_manager;
 
         Field();
         static Field::State segmentStateToCellState(Ship::SegmentState state);
@@ -40,11 +37,10 @@ namespace seabattle {
         
         bbox2 getBoundingBox() const;
 
-        void attack(vec2 coordinates);
-        void createShip(vec2 position, size_t size, Ship::Orientation orientation, bool is_visible = false);
+        void attack(ShipManager &ship_manager, vec2 coordinates);
+        void createShip(ShipManager &ship_manager, vec2 position, size_t size, Ship::Orientation orientation, bool is_visible = false);
         void render() const;
         void coverInFog();
-        int getAvailibleShipsCount(size_t size) const;
     };
 }
 

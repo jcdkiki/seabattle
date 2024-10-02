@@ -56,7 +56,7 @@ namespace seabattle {
                 }
 
                 try {
-                    global.field.createShip(position, size, orientation, true);
+                    global.field.createShip(global.ship_manager, position, size, orientation, true);
                 } catch (std::invalid_argument &e) {
                     global.message.setString(std::string("Error: ") + e.what());
                 }
@@ -91,7 +91,7 @@ namespace seabattle {
         for (int i = 1; i <= Ship::MAX_SIZE; i++) {
             ship_count_str += 
                 std::to_string(i) + ": " +
-                std::to_string(global.field.getAvailibleShipsCount(i)) + " left  |  ";
+                std::to_string(global.ship_manager.getAvailibleShipsCount(i)) + " left  |  ";
         }
         ship_count_text.setString(ship_count_str);
 

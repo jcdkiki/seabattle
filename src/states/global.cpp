@@ -9,7 +9,8 @@ namespace seabattle {
     GlobalState::GlobalState(sf::RenderWindow &window)
         : window(window),
           substate(new WelcomeState(*this)),
-          field(vec2(0, 0))
+          field(vec2(0, 0)),
+          ship_manager()
     {
         if (!font.loadFromFile("assets/font.ttf")) {
             throw std::runtime_error("Failed to load assets/font.ttf");
@@ -18,10 +19,9 @@ namespace seabattle {
         message.setFont(font);
         message.setCharacterSize(16);
         message.setPosition(10, window.getSize().y - 16 - 10);
-        message.setString("");
+        message.setString("Welcome to Seabattle");
 
         title.setFont(font);
-        title.setString("Welcome to Seabattle");
         title.setCharacterSize(16);
         title.setFillColor(sf::Color::White);
         title.setPosition(10, 10);

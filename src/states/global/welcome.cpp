@@ -1,6 +1,7 @@
 #include "states/global/welcome.h"
 #include "states/global/placing.h"
 #include <SFML/Window/Keyboard.hpp>
+#include <stdexcept>
 
 
 namespace seabattle {
@@ -19,25 +20,17 @@ namespace seabattle {
         field_size_text.setPosition(10, 50);
     }
 
-    bool WelcomeState::CreateField()
-    {
-        try {
-            global.field = Field(field_size);
-        } catch (std::exception &e) {
-            global.message.setString(std::string("Error: ") + e.what());
-            return false;
-        }
-        return true;
-    }
-
     void WelcomeState::onKeyDown(sf::Keyboard::Key key)
     {
         switch (key) {
             case sf::Keyboard::Enter:
-                if (this->CreateField()) {
-                    global.substate = std::make_unique<PlacingState>(global);
+                try {
+                    global.field = Field(field_size);
+                } catch (std::invalid_argument &e) {
+                    global.message.setString(std::string("Error: ") + e.what());
                     return;
                 }
+                global.substate = std::make_unique<PlacingState>(global);
                 break;
             case sf::Keyboard::W:
                 field_size.y++;

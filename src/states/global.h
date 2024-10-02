@@ -9,6 +9,7 @@
 #include <SFML/Graphics/Text.hpp>
 
 #include "field.h"
+#include "ship_manager.h"
 
 namespace seabattle {
     class GlobalState {
@@ -30,6 +31,7 @@ namespace seabattle {
         sf::Text message;
         sf::Text title;
         Field field;
+        ShipManager ship_manager;
         std::unique_ptr<Substate> substate;
 
     public:
