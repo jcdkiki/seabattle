@@ -13,7 +13,7 @@ namespace seabattle {
     public:
         typedef std::list<Ship>::iterator Iterator;
 
-        ShipManager(std::initializer_list<size_t> ship_size_list = {1, 1, 1, 2, 2, 3, 3, 4});
+        ShipManager(std::initializer_list<size_t> ship_size_list = {3, 3});
         
         inline Iterator begin() { return ships.begin(); }
         inline Iterator end()   { return ships.end(); }

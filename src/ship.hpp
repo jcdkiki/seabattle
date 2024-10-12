@@ -2,6 +2,7 @@
 #define SEABATTLE_SHIP_H_
 
 #include <cstddef>
+#include <stdexcept>
 
 namespace seabattle {
     class Ship {
@@ -29,7 +30,13 @@ namespace seabattle {
             size_t index;
         public:
             Iterator(Ship *ship = nullptr, size_t index = 0) : ship(ship), index(index) {}
-            void damage() { ship->damageSegment(index); }
+            void damage() 
+            {
+                if (ship == nullptr) {
+                    throw std::runtime_error("bad ship iterator");
+                }
+                ship->damageSegment(index);
+            }
 
             inline SegmentState operator*() { return ship->segments[index]; }
             inline operator bool() { return ship != nullptr; }
