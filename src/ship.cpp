@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 namespace seabattle {
-    Ship::Ship(size_t size) : size(size)
+    Ship::Ship(size_t size) : size(size), health(size * 2)
     {
         if (size > MAX_SIZE || size == 0) {
             throw std::invalid_argument("Invalid ship size");
@@ -21,6 +21,10 @@ namespace seabattle {
         }
 
         SegmentState new_state;
+        if (segments[index] != SegmentState::DESTROYED) {
+            health--;
+        }
+        
         switch (segments[index]) {
             case SegmentState::FULL:
                 new_state = SegmentState::DAMAGED;

@@ -1,11 +1,15 @@
 cmake_minimum_required(VERSION 3.25)
+
+add_compile_options(-fsanitize=address)
+add_link_options(-fsanitize=address)
+
 project(seabattle)
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(OpenGL REQUIRED)
+find_package(SDL2 REQUIRED)
 
 add_executable(seabattle)
-include_directories(seabattle src)
+include_directories(seabattle src ${SDL2_INCLUDE_DIRS})
 add_subdirectory(src)
 
-target_link_libraries(seabattle sfml-graphics sfml-window sfml-system OpenGL::GL)
+target_link_libraries(seabattle ${SDL2_LIBRARIES})

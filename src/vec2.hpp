@@ -1,6 +1,8 @@
 #ifndef SEABATTLE_POINT_H_
 #define SEABATTLE_POINT_H_
 
+#include <algorithm>
+
 namespace seabattle {
     struct vec2 {
         int x;
@@ -11,6 +13,7 @@ namespace seabattle {
 
         inline vec2 operator+(vec2 v) const { return vec2(x + v.x, y + v.y); }
         inline vec2 operator-(vec2 v) const { return vec2(x - v.x, y - v.y); }
+        inline vec2 operator/(int s)  const { return vec2(x / s, y / s); }
 
         inline void operator+=(vec2 v) { x += v.x; y += v.y; }
         inline void operator-=(vec2 v) { x -= v.x; y -= v.y; }
@@ -43,6 +46,18 @@ namespace seabattle {
         {
             return (bbox.max.x > min.x) && (max.x > bbox.min.x) &&
                    (bbox.max.y > min.y) && (max.y > bbox.min.y);
+        }
+
+        inline bbox2 intersection(bbox2 bbox) const
+        {
+            bbox2 res = bbox2(
+                vec2(std::max(min.x, bbox.min.x), std::max(min.y, bbox.min.y)),
+                vec2(std::min(max.x, bbox.max.x), std::min(max.y, bbox.max.y))
+            );
+
+            if (res.max.x < res.min.x || res.max.y < res.min.y)
+                return bbox2();
+            return res;
         }
 
     };
