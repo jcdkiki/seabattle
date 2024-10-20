@@ -1,9 +1,6 @@
 #include "field.hpp"
 #include "ship.hpp"
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Graphics/Rect.hpp>
-#include <SFML/Graphics/Texture.hpp>
 #include <stdexcept>
 #include <cstring>
 #include <utility>

@@ -1,0 +1,492 @@
+@startuml
+class "vec2" as C_0014202929920437685145
+class C_0014202929920437685145 {
++vec2() : void
++vec2(int x, int y) : void
+..
++operator*(int s) const : vec2
++operator+(vec2 v) const : vec2
++operator+=(vec2 v) : void
++operator-(vec2 v) const : vec2
++operator-=(vec2 v) : void
++operator/(int s) const : vec2
+__
++x : int
++y : int
+}
+class "bbox2" as C_0004575140701196749888
+class C_0004575140701196749888 {
++bbox2() : void
++bbox2(vec2 min, vec2 max) : void
+..
++contains(vec2 point) const : bool
++contains(bbox2 bbox) const : bool
++intersection(bbox2 bbox) const : bbox2
++intersects(bbox2 bbox) const : bool
+__
++max : vec2
++min : vec2
+}
+class "Ship" as C_0002192735519759042926
+class C_0002192735519759042926 {
++Ship(size_t size) : void
+..
++operator[](size_t index) const : SegmentState
+..
++damageSegment(size_t index) : void
++getSize() const : size_t
++isDestroyed() const : bool
+__
+{static} +MAX_SIZE : const size_t
+-health : size_t
+-segments : SegmentState[4]
+-size : size_t
+}
+enum "Ship::Orientation" as C_0016486133843191460874
+enum C_0016486133843191460874 {
+HORIZONTAL
+VERTICAL
+}
+enum "Ship::SegmentState" as C_0016504194871418604781
+enum C_0016504194871418604781 {
+FULL
+DAMAGED
+DESTROYED
+}
+class "Ship::SegmentView" as C_0006764281880237464613
+class C_0006764281880237464613 {
++operator*() const : SegmentState
+..
++SegmentView(Ship * ship = nullptr, size_t index = 0) : void
++damage() const : void
++getShip() const : Ship &
++operator bool() const : bool
+__
+-index : size_t
+-ship : Ship *
+}
+class "Field" as C_0011726100853778997750
+class C_0011726100853778997750 {
+-Field(int width, int height) : void
++Field(vec2 size = vec2(0, 0)) : void
++Field(const Field & field) : void
++Field(Field && field) : void
++~Field() : void
+..
++operator=(const Field & field) : Field &
++operator=(Field && field) : Field &
+..
++operator[](vec2 coordinates) const : const Cell &
+..
++addShip(Ship & ship, vec2 position, Ship::Orientation orientation, bool is_visible = false) : void
++attack(vec2 coordinates, bool hidden) : bool
++coverInFog() : void
++getBoundingBox() const : bbox2
+-getCell(vec2 coordinates) : Cell &
+{static} -getShipBoundingBox(Ship & ship, vec2 position, Ship::Orientation orientation) : bbox2
++getSize() const : vec2
+{static} +worldToScreenCoord(vec2 coordinates) : vec2
+__
+{static} +CELL_SIZE : const vec2
+-data : Cell *
+-size : vec2
+}
+class "Field::Cell" as C_0009537728670028662154
+class C_0009537728670028662154 {
+__
++has_fog : bool
++ship_segment : Ship::SegmentView
+}
+abstract "Message" as C_0012057334932614623279
+abstract C_0012057334932614623279 {
++~Message() : void
+..
+{abstract} +clone() const = 0 : std::unique_ptr<Message>
+__
+}
+class "InputMessage" as C_0011967384206468060539
+class C_0011967384206468060539 {
++InputMessage(Action action) : void
+..
++clone() const : std::unique_ptr<Message>
+__
++action : Action
+}
+enum "InputMessage::Action" as C_0014261915196793183452
+enum C_0014261915196793183452 {
+CURSOR_LEFT
+CURSOR_RIGHT
+CURSOR_UP
+CURSOR_DOWN
+PRIMARY_ACTION
+SECONDARY_ACTION
+BACK
+INVALID
+}
+class "RenderFieldMessage" as C_0017477181579766220527
+class C_0017477181579766220527 {
++RenderFieldMessage(Location location, const Field & field, bbox2 cursor) : void
+..
++clone() const : std::unique_ptr<Message>
+__
++cursor : bbox2
++field : const Field &
++location : Location
+}
+enum "RenderFieldMessage::Location" as C_0008420114240218220723
+enum C_0008420114240218220723 {
+LEFT
+RIGHT
+}
+class "RenderFieldPreviewMessage" as C_0015152662515183216554
+class C_0015152662515183216554 {
++RenderFieldPreviewMessage(vec2 size) : void
+..
++clone() const : std::unique_ptr<Message>
+__
++size : vec2
+}
+class "LogMessage" as C_0003555649030164217784
+class C_0003555649030164217784 {
++LogMessage(std::string text) : void
+..
++clone() const : std::unique_ptr<Message>
+__
++text : std::string
+}
+class "ChangeControlMessage" as C_0005859226858777572307
+class C_0005859226858777572307 {
++ChangeControlMessage(GameControl * new_control) : void
+..
++clone() const : std::unique_ptr<Message>
+__
++new_control : GameControl *
+}
+class "StaticMessageGenerator" as C_0009859214580188062920
+class C_0009859214580188062920 {
+#emplace<MessageType,Args...>(Args &&... args) : void
++empty() : bool
++pop() : std::unique_ptr<const Message>
+#push(std::unique_ptr<const Message> msg) : void
+__
+-messages : std::queue<std::unique_ptr<const Message>>
+}
+class "MessageGenerator" as C_0001898742367137229370
+class C_0001898742367137229370 {
++update() : void
+__
+}
+class "StaticMessageReciever" as C_0013441948596296022947
+class C_0013441948596296022947 {
+#getHandlerFor(const Message & msg) : HandlerMethod
++handleMessage(std::unique_ptr<const Message> msg) : void
+#registerHandler<T>(HandlerMethod handler) : void
+__
+#handlers : std::unordered_map<std::type_index,HandlerMethod>
+}
+class "MessageReciever" as C_0009294112219172278268
+class C_0009294112219172278268 {
++update() : void
+__
+}
+class "MessageTransformer" as C_0004505852679299122379
+class C_0004505852679299122379 {
+__
+}
+class "MessagePipe" as C_0012248427572082104194
+class C_0012248427572082104194 {
++handleMessage(std::unique_ptr<const Message> msg) : void
+__
+}
+class "ShipManager" as C_0009483704207473404256
+class C_0009483704207473404256 {
++ShipManager(std::initializer_list<size_t> ship_size_list = = {}) : void
++ShipManager<Iterable>(Iterable begin, Iterable end) : void
+..
++begin() : Iterator
++end() : Iterator
+__
+-ships : std::vector<Ship>
+}
+class "Player" as C_0008321673754078840608
+class C_0008321673754078840608 {
+__
++cursor : vec2
++double_damage_flag : bool
++field : Field
++ships : ShipManager
+}
+abstract "IAbility" as C_0017515876381559383466
+abstract C_0017515876381559383466 {
++~IAbility() : void
+..
+{abstract} +use() = 0 : void
+__
+}
+class "AbilityRegistry" as C_0007359110578781135047
+class C_0007359110578781135047 {
+-AbilityRegistry() = default : void
+..
++add(const char * name, FactoryFn factory) : bool
++begin() : Iterator
++count() : size_t
++end() : Iterator
+{static} +self() : AbilityRegistry &
+__
+-factories : std::vector<Entry>
+}
+class "AbilityRegistry::Entry" as C_0000862275520697867199
+class C_0000862275520697867199 {
+__
++factory : FactoryFn
++name : const char *
+}
+abstract "GameControl" as C_0018327406431832752234
+abstract C_0018327406431832752234 {
++GameControl(GameState & state) : void
++~GameControl() : void
+..
+{abstract} +handleInput(std::unique_ptr<const InputMessage> msg) = 0 : void
+#handleXInput(int & x, const InputMessage & msg) : bool
+#handleXYInput(vec2 & vec, const InputMessage & msg) : bool
+__
+#state : GameState &
+}
+class "AbilityManager" as C_0000787211276188474077
+class C_0000787211276188474077 {
++AbilityManager(Player & user, Player & target) : void
+..
++addRandomAbility() : const char *
++empty() : bool
++pop() : AbilityRegistry::FactoryFn
+__
+-abilities : std::vector<AbilityRegistry::FactoryFn>
+}
+class "HumanPlayer" as C_0013025510819651191744
+class C_0013025510819651191744 {
++HumanPlayer(Player & opponent) : void
+..
++attack(Player & target) : void
++useAbility(Player & target) : void
+__
++abilities : AbilityManager
+}
+class "GameState" as C_0008519102478726695553
+class C_0008519102478726695553 {
++GameState() : void
+__
++opponent : Player
++player : HumanPlayer
+}
+class "FightControl" as C_0004223601960260428185
+class C_0004223601960260428185 {
++FightControl(GameState & state) : void
+..
++handleInput(std::unique_ptr<const InputMessage> msg) : void
+__
+}
+class "PlaceShipsControl" as C_0013918047988641088159
+class C_0013918047988641088159 {
++PlaceShipsControl(GameState & state) : void
+..
++handleInput(std::unique_ptr<const InputMessage> msg) : void
+-showShipPlacement() : void
+__
+-current_ship : ShipManager::Iterator
+-orientation : Ship::Orientation
+-position : vec2
+}
+class "SetupShipsControl" as C_0009505110142782394327
+class C_0009505110142782394327 {
++SetupShipsControl(GameState & state) : void
+..
++handleInput(std::unique_ptr<const InputMessage> msg) : void
+__
+-ship_sizes : std::vector<size_t>
+-size : int
+}
+class "SetupFieldControl" as C_0003236065810157856770
+class C_0003236065810157856770 {
++SetupFieldControl(GameState & state) : void
+..
++handleInput(std::unique_ptr<const InputMessage> msg) : void
+__
+-size : vec2
+}
+class "Game" as C_0017304172626563555845
+class C_0017304172626563555845 {
++Game() : void
++~Game() : void
+..
++handleChangeControl(std::unique_ptr<const ChangeControlMessage> msg) : void
++handleInput(std::unique_ptr<const InputMessage> msg) : void
++isRunning() : bool
++update(MessageGenerator & input, MessageReciever & output) : void
+__
+#control : GameControl *
+#is_running : bool
+#state : GameState
+}
+class "TUIInputDevice" as C_0004911612563944494107
+class C_0004911612563944494107 {
++update() : void
+__
+}
+class "TUIOutputDevice" as C_0009494710666426202988
+class C_0009494710666426202988 {
++TUIOutputDevice() : void
+..
+-drawField(const Field & field, bbox2 cursor) : void
+-handleLogMessage(std::unique_ptr<const LogMessage> msg) : void
+-handleRenderFieldMessage(std::unique_ptr<const RenderFieldMessage> msg) : void
+-handleRenderFieldPreviewMessage(std::unique_ptr<const RenderFieldPreviewMessage> msg) : void
++update() : void
+__
+}
+class "GUIInputDevice" as C_0002007091943744299805
+class C_0002007091943744299805 {
++update() : void
+__
+}
+class "GUIOutputDevice" as C_0003978306484513571670
+class C_0003978306484513571670 {
++GUIOutputDevice() : void
++~GUIOutputDevice() : void
+..
+-drawField(vec2 pos, const Field & field, bbox2 cursor) : void
+-handleLogMessage(std::unique_ptr<const LogMessage> msg) : void
+-handleRenderFieldMessage(std::unique_ptr<const RenderFieldMessage> msg) : void
+-handleRenderFieldPreviewMessage(std::unique_ptr<const RenderFieldPreviewMessage> msg) : void
++update() : void
+__
+-font : TTF_Font *
+-log_message : std::string
+-log_time : uint64_t
+-win_surface : SDL_Surface *
+-window : SDL_Window *
+}
+C_0004575140701196749888 o-- C_0014202929920437685145 : +min
+C_0004575140701196749888 o-- C_0014202929920437685145 : +max
+C_0002192735519759042926 o-- "4" C_0016504194871418604781 : -segments
+C_0016486133843191460874 --+ C_0002192735519759042926
+C_0016504194871418604781 --+ C_0002192735519759042926
+C_0006764281880237464613 --+ C_0002192735519759042926
+C_0006764281880237464613 ..> C_0016504194871418604781
+C_0006764281880237464613 --> C_0002192735519759042926 : -ship
+C_0011726100853778997750 ..> C_0002192735519759042926
+C_0011726100853778997750 ..> C_0016486133843191460874
+C_0011726100853778997750 ..> C_0004575140701196749888
+C_0011726100853778997750 --> C_0009537728670028662154 : -data
+C_0011726100853778997750 o-- C_0014202929920437685145 : -size
+C_0011726100853778997750 --> C_0014202929920437685145 : +CELL_SIZE
+C_0009537728670028662154 --+ C_0011726100853778997750
+C_0009537728670028662154 o-- C_0006764281880237464613 : +ship_segment
+C_0011967384206468060539 o-- C_0014261915196793183452 : +action
+C_0012057334932614623279 <|-- C_0011967384206468060539
+
+C_0014261915196793183452 --+ C_0011967384206468060539
+C_0017477181579766220527 o-- C_0008420114240218220723 : +location
+C_0017477181579766220527 --> C_0011726100853778997750 : +field
+C_0017477181579766220527 o-- C_0004575140701196749888 : +cursor
+C_0012057334932614623279 <|-- C_0017477181579766220527
+
+C_0008420114240218220723 --+ C_0017477181579766220527
+C_0015152662515183216554 o-- C_0014202929920437685145 : +size
+C_0012057334932614623279 <|-- C_0015152662515183216554
+
+C_0012057334932614623279 <|-- C_0003555649030164217784
+
+C_0005859226858777572307 --> C_0018327406431832752234 : +new_control
+C_0012057334932614623279 <|-- C_0005859226858777572307
+
+C_0009859214580188062920 o-- C_0012057334932614623279 : -messages
+C_0009859214580188062920 <|-- C_0001898742367137229370
+
+C_0013441948596296022947 o-- C_0013441948596296022947 : #handlers
+C_0013441948596296022947 o-- C_0012057334932614623279 : #handlers
+C_0013441948596296022947 <|-- C_0009294112219172278268
+
+C_0013441948596296022947 <|-- C_0004505852679299122379
+
+C_0009859214580188062920 <|-- C_0004505852679299122379
+
+C_0012248427572082104194 ..> C_0012057334932614623279
+C_0004505852679299122379 <|-- C_0012248427572082104194
+
+C_0009483704207473404256 o-- C_0002192735519759042926 : -ships
+C_0008321673754078840608 o-- C_0011726100853778997750 : +field
+C_0008321673754078840608 o-- C_0009483704207473404256 : +ships
+C_0008321673754078840608 o-- C_0014202929920437685145 : +cursor
+C_0001898742367137229370 <|-- C_0017515876381559383466
+
+C_0007359110578781135047 ..> C_0000862275520697867199
+C_0007359110578781135047 ..> C_0008321673754078840608
+C_0000862275520697867199 --+ C_0007359110578781135047
+C_0000862275520697867199 ..> C_0017515876381559383466 : +factory
+C_0000862275520697867199 --> C_0008321673754078840608 : +factory
+C_0018327406431832752234 ..> C_0014202929920437685145
+C_0018327406431832752234 ..> C_0011967384206468060539
+C_0018327406431832752234 --> C_0008519102478726695553 : #state
+C_0001898742367137229370 <|-- C_0018327406431832752234
+
+C_0000787211276188474077 ..> C_0017515876381559383466 : -abilities
+C_0000787211276188474077 --> C_0008321673754078840608 : -abilities
+C_0013025510819651191744 o-- C_0000787211276188474077 : +abilities
+C_0008321673754078840608 <|-- C_0013025510819651191744
+
+C_0001898742367137229370 <|-- C_0013025510819651191744
+
+C_0008519102478726695553 o-- C_0013025510819651191744 : +player
+C_0008519102478726695553 o-- C_0008321673754078840608 : +opponent
+C_0004223601960260428185 ..> C_0008519102478726695553
+C_0004223601960260428185 ..> C_0011967384206468060539
+C_0018327406431832752234 <|-- C_0004223601960260428185
+
+C_0013918047988641088159 ..> C_0008519102478726695553
+C_0013918047988641088159 ..> C_0011967384206468060539
+C_0013918047988641088159 o-- C_0014202929920437685145 : -position
+C_0013918047988641088159 o-- C_0016486133843191460874 : -orientation
+C_0013918047988641088159 --> C_0002192735519759042926 : -current_ship
+C_0013918047988641088159 o-- C_0002192735519759042926 : -current_ship
+C_0018327406431832752234 <|-- C_0013918047988641088159
+
+C_0009505110142782394327 ..> C_0008519102478726695553
+C_0009505110142782394327 ..> C_0011967384206468060539
+C_0018327406431832752234 <|-- C_0009505110142782394327
+
+C_0003236065810157856770 ..> C_0008519102478726695553
+C_0003236065810157856770 ..> C_0011967384206468060539
+C_0003236065810157856770 o-- C_0014202929920437685145 : -size
+C_0018327406431832752234 <|-- C_0003236065810157856770
+
+C_0017304172626563555845 ..> C_0011967384206468060539
+C_0017304172626563555845 ..> C_0005859226858777572307
+C_0017304172626563555845 ..> C_0001898742367137229370
+C_0017304172626563555845 ..> C_0009294112219172278268
+C_0017304172626563555845 o-- C_0008519102478726695553 : #state
+C_0017304172626563555845 --> C_0018327406431832752234 : #control
+C_0012248427572082104194 <|-- C_0017304172626563555845
+
+C_0001898742367137229370 <|-- C_0004911612563944494107
+
+C_0009494710666426202988 ..> C_0011726100853778997750
+C_0009494710666426202988 ..> C_0004575140701196749888
+C_0009494710666426202988 ..> C_0003555649030164217784
+C_0009494710666426202988 ..> C_0017477181579766220527
+C_0009494710666426202988 ..> C_0015152662515183216554
+C_0009294112219172278268 <|-- C_0009494710666426202988
+
+C_0001898742367137229370 <|-- C_0002007091943744299805
+
+C_0003978306484513571670 ..> C_0014202929920437685145
+C_0003978306484513571670 ..> C_0011726100853778997750
+C_0003978306484513571670 ..> C_0004575140701196749888
+C_0003978306484513571670 ..> C_0003555649030164217784
+C_0003978306484513571670 ..> C_0017477181579766220527
+C_0003978306484513571670 ..> C_0015152662515183216554
+C_0009294112219172278268 <|-- C_0003978306484513571670
+
+
+'Generated with clang-uml, version 0.5.5
+'LLVM version Ubuntu clang version 18.1.3 (1ubuntu1)
+@enduml

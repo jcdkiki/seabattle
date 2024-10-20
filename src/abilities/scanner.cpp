@@ -19,6 +19,7 @@ namespace seabattle {
         }
 
         emplace<LogMessage>("Scanner didn't find anything :(((");
+        emplace<RenderFieldMessage>(RenderFieldMessage::LEFT, field, region);
     }
 
     static bool is_registered  = AbilityRegistry::self().add("Scanner", [](Player &user, Player &target) { return std::make_unique<Scanner>(target); });
