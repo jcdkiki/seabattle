@@ -2,25 +2,14 @@
 #include <iostream>
 
 namespace seabattle {
-    AbilityFactory &AbilityFactory::getInstance()
+    AbilityRegistry &AbilityRegistry::self()
     {
-        static AbilityFactory instance;
+        static AbilityRegistry instance;
         return instance;
     }
         
-    bool AbilityFactory::registerAbility(GeneratorFn generator) {
-        generators.push_back(generator);
-        std::cout << "Registered new ability" << std::endl;
+    bool AbilityRegistry::add(const char *name, FactoryFn factory) {
+        factories.push_back({name, factory});
         return true;
-    }
-
-    AbilityFactory::GeneratorFn AbilityFactory::getGenerator(size_t index)
-    {
-        return generators[index];
-    }
-
-    size_t AbilityFactory::getSize()
-    {
-        return generators.size();
     }
 }

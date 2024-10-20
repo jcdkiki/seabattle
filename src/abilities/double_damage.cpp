@@ -1,19 +1,12 @@
 #include "double_damage.hpp"
-#include "ability.hpp"
-
-#include "player.hpp"
+#include "messages.hpp"
 
 namespace seabattle {
-    void DoubleDamage::use(Player &user)
+    void DoubleDamage::use()
     {
-        user.setDoubleDamageFlag();
+        double_damage_flag = true;
+        emplace<LogMessage>("You were blessed with Double Damage");
     }
 
-    const char *DoubleDamage::getName()
-    {
-        return "Double Damage";
-    }
-
-    static DoubleDamage *createInstance() { return new DoubleDamage(); }
-    static bool is_registered = AbilityFactory::getInstance().registerAbility((AbilityFactory::GeneratorFn)createInstance);
+    static bool is_registered  = AbilityRegistry::self().add("Double damage", [](Player &user, Player &target) { return std::make_unique<DoubleDamage>(user); });
 }

@@ -16,16 +16,13 @@ namespace seabattle {
 
     void Ship::damageSegment(size_t index)
     {
-        if (index >= size) {
-            throw std::invalid_argument("Index is too large");
-        }
-
+        SegmentState state = (*this)[index];
         SegmentState new_state;
-        if (segments[index] != SegmentState::DESTROYED) {
+        if (state != SegmentState::DESTROYED) {
             health--;
         }
         
-        switch (segments[index]) {
+        switch (state) {
             case SegmentState::FULL:
                 new_state = SegmentState::DAMAGED;
                 break;

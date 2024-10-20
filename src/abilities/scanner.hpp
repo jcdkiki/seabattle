@@ -4,10 +4,12 @@
 #include "ability.hpp"
 
 namespace seabattle {
-    class Scanner : public Ability {
+    class Scanner : public IAbility {
+        Field &field;
+        vec2 position;
     public:
-        void use(Player &user);
-        const char *getName();
+        Scanner(Player &target) : field(target.field), position(target.cursor) {}
+        void use();
     };
 }
 

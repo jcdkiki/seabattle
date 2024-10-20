@@ -24,7 +24,7 @@ namespace seabattle {
     public:
         static constexpr vec2 CELL_SIZE{32, 32};
 
-        Field(vec2 size);
+        Field(vec2 size = vec2(0, 0));
         Field(const Field &field);
         Field(Field &&field);
         ~Field();

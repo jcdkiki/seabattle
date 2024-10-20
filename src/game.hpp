@@ -1,179 +1,269 @@
 #ifndef SEABATTLE_GAME_H_
 #define SEABATTLE_GAME_H_
 
-#include "field.hpp"
 #include "messaging.hpp"
 #include "messages.hpp"
-#include "ship_manager.hpp"
+#include <memory>
+#include <stdexcept>
 #include <string>
 
+#include "human_player.hpp"
+#include "player.hpp"
+
 namespace seabattle {
-    class Game : public MessageTransformer {
+    struct GameState {
+        HumanPlayer player;
+        Player opponent;
+
+        GameState() : player(opponent) {}
+    };
+    
+    class GameControl : public MessageGenerator {
     protected:
-        enum class State {
-            CREATING_FIELD,
-            SETUP_SHIPS,
-            PLACING_SHIPS,
-        };
+        GameState &state;
 
-        State state;
-        vec2 choice;
+        bool handleXYInput(vec2 &vec, const InputMessage &msg)
+        {
+            switch (msg.action) {
+                case InputMessage::CURSOR_RIGHT: vec.x++; break;
+                case InputMessage::CURSOR_LEFT: vec.x--; break;
+                case InputMessage::CURSOR_UP: vec.y--; break;
+                case InputMessage::CURSOR_DOWN: vec.y++; break;
+                default: return false;
+            }
 
-        // SETUP_SHIPS
-        std::vector<size_t> ship_sizes;
+            emplace<LogMessage>("Your input: " + std::to_string(vec.x) + "x" + std::to_string(vec.y));
+            return true;
+        }
 
-        // PLACING_SHIPS
+        bool handleXInput(int &x, const InputMessage &msg)
+        {
+            switch (msg.action) {
+                case InputMessage::CURSOR_RIGHT: x++; break;
+                case InputMessage::CURSOR_LEFT: x--; break;
+                default: return false;
+            }
+
+            emplace<LogMessage>("Your choice: " + std::to_string(x));
+            return true;
+        }
+
+    public:
+        GameControl(GameState &state) : state(state) {}
+        virtual ~GameControl() {};
+        virtual void handleInput(std::unique_ptr<const InputMessage> msg) = 0;
+    };
+
+    class FightControl : public GameControl {
+    public:
+        FightControl(GameState &state) : GameControl(state)
+        {
+            state.player.field.coverInFog();
+            emplace<LogMessage>("Great job! Now it's time to FIGHT!!!!");
+
+            bbox2 cursor(state.player.cursor, state.player.cursor + vec2(1, 1));
+            emplace<RenderFieldMessage>(RenderFieldMessage::LEFT, state.player.field, cursor);
+        }
+
+        void handleInput(std::unique_ptr<const InputMessage> msg)
+        {
+            if (msg->action == InputMessage::PRIMARY_ACTION) {
+                try {
+                    state.player.attack(state.player);
+                }
+                catch (std::invalid_argument &e) {
+                    emplace<LogMessage>(e.what());
+                }
+
+                // AI attack code will be here
+            }
+            else if (msg->action == InputMessage::SECONDARY_ACTION) {
+                try {
+                    state.player.useAbility(state.player);
+                }
+                catch (std::invalid_argument &e) {
+                    emplace<LogMessage>(e.what());
+                }
+            }
+            else handleXYInput(state.player.cursor, *msg);
+
+            bbox2 cursor(state.player.cursor, state.player.cursor + vec2(1, 1));
+            emplace<RenderFieldMessage>(RenderFieldMessage::LEFT, state.player.field, cursor);
+        }
+    };
+
+    class PlaceShipsControl : public GameControl {
+        vec2 position;
         Ship::Orientation orientation;
         ShipManager::Iterator current_ship;
 
-        Field enemy_field;
-        Field player_field;
-        ShipManager player_ships;
-        ShipManager enemy_ships;
-        bool is_running;
-
-    public:
-        void handleXYChoiceInput(const InputMessage &msg)
-        {
-            switch (msg.action) {
-                case InputMessage::CURSOR_RIGHT: choice.x++; break;
-                case InputMessage::CURSOR_LEFT: choice.x--; break;
-                case InputMessage::CURSOR_UP: choice.y--; break;
-                case InputMessage::CURSOR_DOWN: choice.y++; break;
-                default: return;
-            }
-
-            pushMessage(new LogMessage("Your choice: " + std::to_string(choice.x) + "x" + std::to_string(choice.y)));
-        }
-
-        void handleXChoiceInput(const InputMessage &msg)
-        {
-            switch (msg.action) {
-                case InputMessage::CURSOR_RIGHT: choice.x++; break;
-                case InputMessage::CURSOR_LEFT: choice.x--; break;
-                default: return;
-            }
-
-            pushMessage(new LogMessage("Your choice: " + std::to_string(choice.x)));
-        }
-
-        void showShipPlacementInfo()
-        {
-            pushMessage(new LogMessage("Placing ship of size " + std::to_string(current_ship->getSize())));
-        }
-
-        void showSetupShipsInfo()
-        {
-            pushMessage(new LogMessage("Enter ship size or proceed to placing your ships"));
-        }
-
         void showShipPlacement()
         {
-            bbox2 cursor(choice, choice);
-            if (current_ship != player_ships.end()) {
+            bbox2 cursor(position, position);
+            if (current_ship != state.player.ships.end()) {
                 if (orientation == Ship::Orientation::HORIZONTAL)
                     cursor.max += vec2(current_ship->getSize(), 1);
                 else
                     cursor.max += vec2(1, current_ship->getSize());
             }
 
-            pushMessage(new RenderFieldMessage(RenderFieldMessage::LEFT, player_field, cursor));
+            emplace<RenderFieldMessage>(RenderFieldMessage::LEFT, state.player.field, cursor);
         }
 
-        void handleInputCreatingField(const InputMessage &msg)
+    public:
+        PlaceShipsControl(GameState &state) : GameControl(state)
         {
-            handleXYChoiceInput(msg);
-
-            if (msg.action == InputMessage::PRIMARY_ACTION) {
-                try {
-                    player_field = Field(choice);
-                }
-                catch (std::invalid_argument &e) {
-                    pushMessage(new LogMessage(e.what()));
-                    return;
-                }
-
-                choice = vec2(0, 0);
-                state = State::SETUP_SHIPS;
-                showSetupShipsInfo();
-            }
-        }
-
-        void handleInputSetupShips(const InputMessage &msg)
-        {
-            handleXChoiceInput(msg);
-
-            if (msg.action == InputMessage::PRIMARY_ACTION) {
-                ship_sizes.push_back(choice.x);
-                showSetupShipsInfo();
-            }
-            else if (msg.action == InputMessage::SECONDARY_ACTION) {
-                try {
-                    player_ships = ShipManager(ship_sizes.begin(), ship_sizes.end());
-                }
-                catch (std::invalid_argument &e) {
-                    ship_sizes.resize(0);
-                    pushMessage(new LogMessage(e.what()));
-                    pushMessage(new LogMessage("Try again"));
-                    return;
-                }
-
-                state = State::PLACING_SHIPS;
-                choice = vec2(0, 0);
-                ship_sizes.resize(0);
-                current_ship = player_ships.begin();
-                pushMessage(new LogMessage("Great job, not place your ships!"));
-                showShipPlacement();
-            }
-        }
-
-        void handleInputPlacingShips(const InputMessage &msg)
-        {
-            handleXYChoiceInput(msg);
-
-            if (msg.action == InputMessage::SECONDARY_ACTION) {
-                orientation = (orientation == Ship::Orientation::HORIZONTAL) ? Ship::Orientation::VERTICAL : Ship::Orientation::HORIZONTAL;
-            }
-            else if (msg.action == InputMessage::PRIMARY_ACTION) {
-                try {
-                    player_field.addShip(*current_ship, choice, orientation, true);
-                    current_ship++;
-                }
-                catch (std::invalid_argument &e) {
-                    pushMessage(new LogMessage(e.what()));
-                }
-
-                if (current_ship == player_ships.end()) {
-                    pushMessage(new LogMessage("You rooock duuude!"));
-                    state = State::CREATING_FIELD;
-                    return;
-                }
-            }
+            emplace<LogMessage>("Great job, now place your ships");
+            current_ship = state.player.ships.begin();
 
             showShipPlacement();
         }
 
-        void handleInput(const InputMessage &msg)
+        void handleInput(std::unique_ptr<const InputMessage> msg)
         {
-            if (msg.action == InputMessage::BACK) {
-                is_running = false;
+            if (msg->action == InputMessage::SECONDARY_ACTION) {
+                orientation = (orientation == Ship::Orientation::HORIZONTAL) ? Ship::Orientation::VERTICAL : Ship::Orientation::HORIZONTAL;
             }
+            else if (msg->action == InputMessage::PRIMARY_ACTION) {
+                try {
+                    state.player.field.addShip(*current_ship, position, orientation, true);
+                    current_ship++;
+                }
+                catch (std::invalid_argument &e) {
+                    emplace<LogMessage>(e.what());
+                }
 
-            switch (state) {
-                case State::CREATING_FIELD: handleInputCreatingField(msg); return;
-                case State::SETUP_SHIPS: handleInputSetupShips(msg); return;
-                case State::PLACING_SHIPS: handleInputPlacingShips(msg); return;
+                if (current_ship == state.player.ships.end()) {
+                    emplace<ChangeControlMessage>(new FightControl(state));
+                }
             }
+            else handleXYInput(position, *msg);
+
+            showShipPlacement();
+        }
+    };
+
+    class SetupShipsControl : public GameControl {
+        int size;
+        std::vector<size_t> ship_sizes;
+    public:
+        SetupShipsControl(GameState &state) : GameControl(state), size(0)
+        {
+            emplace<LogMessage>("Good job, now select ship sizes!");
         }
 
+        void handleInput(std::unique_ptr<const InputMessage> msg)
+        {
+            if (msg->action == InputMessage::PRIMARY_ACTION) {
+                if (size <= 0 || size > Ship::MAX_SIZE) {
+                    emplace<LogMessage>("Invalid ship size. Try again");
+                }
+                else {
+                    ship_sizes.push_back(size);
+                    emplace<LogMessage>("Added ship. Now create another one or proceed to the next stage");
+                }
+            }
+            else if (msg->action == InputMessage::SECONDARY_ACTION) {
+                try {
+                    state.player.ships = ShipManager(ship_sizes.begin(), ship_sizes.end());
+                    emplace<ChangeControlMessage>(new PlaceShipsControl(state));
+                }
+                catch (std::invalid_argument &e) {
+                    emplace<LogMessage>(std::string("Error: ") + e.what() + " | Try again.");
+                    emplace<ChangeControlMessage>(new SetupShipsControl(state));
+                }
+            }
+            else handleXInput(size, *msg);
+        }
+    };
+
+    class SetupFieldControl : public GameControl {
+        vec2 size;
+    public:
+        SetupFieldControl(GameState &state) : GameControl(state)
+        {
+            emplace<LogMessage>("Welcome to seabattle. Select field size");
+        }
+
+        void handleInput(std::unique_ptr<const InputMessage> msg)
+        {
+            if (handleXYInput(size, *msg)) {
+                emplace<RenderFieldPreviewMessage>(size);
+                return;
+            }
+
+            if (msg->action == InputMessage::PRIMARY_ACTION) {
+                try {
+                    state.player.field = Field(size);
+                }
+                catch (std::invalid_argument &e) {
+                    emplace<LogMessage>(e.what());
+                    return;
+                }
+
+                emplace<ChangeControlMessage>(new SetupShipsControl(state));
+            }
+        }
+    };
+
+    class Game : public MessagePipe {
+    protected:
+        GameState state;
+        GameControl *control;
+        bool is_running;
+
+    public:
         bool isRunning()
         {
             return is_running;
         }
 
-        Game() : is_running(true), player_field(vec2(0, 0)), enemy_field(vec2(0, 0))
+        void handleInput(std::unique_ptr<const InputMessage> msg)
+        {
+            if (msg->action == InputMessage::BACK) {
+                is_running = false;
+                return;
+            }
+
+            control->handleInput(std::move(msg));
+
+            while (!control->empty()) {
+                this->handleMessage(std::move(control->pop()));
+            }
+        }
+
+        void handleChangeControl(std::unique_ptr<const ChangeControlMessage> msg)
+        {
+            delete control;
+            control = msg->new_control;
+        }
+
+        void update(MessageGenerator &input, MessageReciever &output)
+        {
+            input.update();
+            while (!input.empty()) {
+                this->handleMessage(std::move(input.pop()));
+            }
+
+            while (!state.player.empty()) {
+                this->handleMessage(std::move(state.player.pop()));
+            }
+
+            while (!this->empty()) {
+                output.handleMessage(std::move(this->pop()));
+            }
+            output.update();
+        }
+
+        Game() : is_running(true), control(new SetupFieldControl(state))
         {
             registerHandler<InputMessage>((HandlerMethod)&Game::handleInput);
+            registerHandler<ChangeControlMessage>((HandlerMethod)&Game::handleChangeControl);
+        }
+        
+        ~Game()
+        {
+            delete control;
         }
     };
 }

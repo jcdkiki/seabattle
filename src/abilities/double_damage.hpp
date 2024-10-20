@@ -4,10 +4,11 @@
 #include "ability.hpp"
 
 namespace seabattle {
-    class DoubleDamage : public Ability {
+    class DoubleDamage : public IAbility {
+        bool &double_damage_flag;
     public:
-        void use(Player &user);
-        const char *getName();
+        DoubleDamage(Player &user) : double_damage_flag(user.double_damage_flag) {}
+        void use();
     };
 }
 

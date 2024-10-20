@@ -4,10 +4,11 @@
 #include "ability.hpp"
 
 namespace seabattle {
-    class SneakyAttack : public Ability {
+    class SneakyAttack : public IAbility {
+        ShipManager &ships;
     public:
-        void use(Player &user);
-        const char *getName();
+        SneakyAttack(Player &target) : ships(target.ships) {}
+        void use();
     };
 }
 

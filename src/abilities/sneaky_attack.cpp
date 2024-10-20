@@ -1,51 +1,30 @@
 #include "sneaky_attack.hpp"
-
+#include "messages.hpp"
 #include <cmath>
-#include <queue>
-#include "player.hpp"
-#include <iostream>
 
 namespace seabattle {
-    void SneakyAttack::use(Player &user)
+    void SneakyAttack::use()
     {
-        Field& field = user.getEnemyField();
-        vec2 size = field.getSize();
-        vec2 start = vec2(abs(rand()) % size.x, abs(rand()) % size.y);
-
-        std::queue<vec2> q;
-        std::vector<bool> visited(size.x * size.y);
-        q.push(start);
-
-        while (!q.empty()) {
-            vec2 cur = q.front();
-            q.pop();
-
-            if (!field.getBoundingBox().contains(cur) || visited[cur.x + cur.y*size.x]) {
-                continue;
-            }
-            visited[cur.x + cur.y*size.x] = true;
-
-            const Ship::SegmentView segment = field[cur].ship_segment;
-            if (segment && *segment != Ship::SegmentState::DESTROYED) {
-                std::cout << "Sneaky attack was performed successfuly" << std::endl;
-                user.attack(cur, true);
-                return;
-            }
-
-            q.push(cur + vec2(1, 0));
-            q.push(cur + vec2(-1, 0));
-            q.push(cur + vec2(0, 1));
-            q.push(cur + vec2(0, -1));
+        std::vector<Ship*> good_ships;
+        for (Ship &ship : ships) {
+            if (!ship.isDestroyed())
+                good_ships.push_back(&ship);
         }
 
-        std::cout << "All ships are already destroyed" << std::endl;
+        Ship &ship = *good_ships[rand() % good_ships.size()];
+        
+        std::vector<size_t> good_segments;
+        for (size_t i = 0; i < ship.getSize(); i++) {
+            if (ship[i] != Ship::SegmentState::DESTROYED) {
+                good_segments.push_back(i);
+            }
+        }
+
+        size_t segment = good_segments[rand() % good_segments.size()];
+        ship.damageSegment(segment);
+
+        emplace<LogMessage>("Sneaky attack was performed successfully");
     }
 
-    const char *SneakyAttack::getName()
-    {
-        return "Sneaky Attack";
-    }
-
-    static SneakyAttack *createInstance() { return new SneakyAttack(); }
-    static bool is_registered = AbilityFactory::getInstance().registerAbility((AbilityFactory::GeneratorFn)createInstance);
+    static bool is_registered  = AbilityRegistry::self().add("Sneaky Attack", [](Player &user, Player &target) { return std::make_unique<SneakyAttack>(target); });
 }

@@ -2,17 +2,17 @@
 #define SEABATTLE_SHIP_MANAGER_H_
 
 #include <initializer_list>
-#include <list>
+#include <vector>
 
 #include "ship.hpp"
 
 namespace seabattle {
     class ShipManager {
     private:
-        std::list<Ship> ships;
+        std::vector<Ship> ships;
 
     public:
-        typedef std::list<Ship>::iterator Iterator;
+        typedef std::vector<Ship>::iterator Iterator;
 
         ShipManager(std::initializer_list<size_t> ship_size_list = {});
         

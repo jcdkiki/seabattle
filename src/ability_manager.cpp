@@ -1,50 +1,38 @@
 #include "ability_manager.hpp"
 #include "ability.hpp"
-#include <algorithm>
 #include <random>
-#include <stdexcept>
+#include <algorithm>
 
 namespace seabattle {
-    AbilityManager::AbilityManager()
+    AbilityManager::AbilityManager(Player &user, Player &target)
     {
-        AbilityFactory &factory = AbilityFactory::getInstance();
-        size_t size = factory.getSize();
-        for (size_t i = 0; i < size; i++) {
-            abilities.emplace_back(factory.getGenerator(i)());
+        AbilityRegistry &registry = AbilityRegistry::self();
+        for (auto entry : registry) {
+            abilities.push_back(entry.factory);
         }
-
         std::shuffle(abilities.begin(), abilities.end(), std::default_random_engine(time(NULL)));
     }
 
-    Ability &AbilityManager::addRandomAbility(Player &player)
+    const char *AbilityManager::addRandomAbility()
     {
-        AbilityFactory &factory = AbilityFactory::getInstance();
-        size_t index = rand() % factory.getSize();
-        Ability *ability = factory.getGenerator(index)();
-        
-        abilities.emplace_back(ability);
-        return *ability;
+        AbilityRegistry &registry = AbilityRegistry::self();
+        const AbilityRegistry::Entry &entry = *(registry.begin() + (rand() % registry.count())); 
+        abilities.push_back(entry.factory);
+        return entry.name;
     }
 
-    Ability &AbilityManager::getAbility()
+    AbilityRegistry::FactoryFn AbilityManager::pop()
     {
-        if (isEmpty()) {
+        if (this->empty()) {
             throw std::runtime_error("AbilityManager`s queue is empty");
         }
 
-        return *abilities.front().get();
-    }
-
-    void AbilityManager::popAbility()
-    {
-        if (isEmpty()) {
-            throw std::runtime_error("AbilityManager`s queue is empty");
-        }
-
+        auto res = abilities.front();
         abilities.erase(abilities.begin());
+        return res;
     }
 
-    bool AbilityManager::isEmpty()
+    bool AbilityManager::empty()
     {
         return abilities.size() == 0;
     }

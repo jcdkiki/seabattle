@@ -4,45 +4,56 @@
 #include <functional>
 #include <queue>
 #include <stdexcept>
+#include <type_traits>
 #include <typeindex>
+#include <memory>
 #include <unordered_map>
 #include "messages.hpp"
 
 namespace seabattle {
-    class MessageGenerator {
+    class StaticMessageGenerator {
     private:
-        std::queue<const Message*> messages;
+        std::queue<std::unique_ptr<const Message>> messages;
     
     protected:
-        void pushMessage(const Message *msg)
+        template<class MessageType, typename... Args>
+        inline void emplace(Args &&...args)
         {
-            messages.push(msg);
+            static_assert(std::is_base_of_v<Message, MessageType>);
+            messages.emplace(std::make_unique<MessageType>(args...));
+        }
+
+        inline void push(std::unique_ptr<const Message> msg)
+        {
+            messages.push(std::move(msg));
         }
     
     public:
-        const Message *popMessage()
+        bool empty()
         {
-            if (messages.size() == 0) {
-                return nullptr;
-            }
-
-            const Message *msg = messages.front();
-            messages.pop();
-            return msg;
+            return messages.size() == 0;
         }
 
-        ~MessageGenerator()
+        std::unique_ptr<const Message> pop()
         {
-            while (messages.size() > 0) {
-                delete messages.front();
-                messages.pop();
+            if (messages.size() == 0) {
+                throw std::runtime_error("No message to pop");
             }
+
+            std::unique_ptr<const Message> msg = std::move(messages.front());
+            messages.pop();
+            return std::move(msg);
         }
     };
 
-    class MessageReciever {
+    class MessageGenerator : public StaticMessageGenerator {
+    public:
+        virtual void update() {};
+    };
+
+    class StaticMessageReciever {
     protected:
-        typedef bool (MessageReciever::*HandlerMethod)(const Message &msg);
+        using HandlerMethod = void(StaticMessageReciever::*)(std::unique_ptr<const Message>);
         std::unordered_map<std::type_index, HandlerMethod> handlers;
     
         HandlerMethod getHandlerFor(const Message &msg)
@@ -61,18 +72,39 @@ namespace seabattle {
         }
 
     public:
-        virtual bool handleMessage(const Message *msg)
+        virtual void handleMessage(std::unique_ptr<const Message> msg)
         {
-            HandlerMethod method = getHandlerFor(*msg);
+            const Message &msg_ref = *msg;
+            HandlerMethod method = getHandlerFor(msg_ref);
             if (method == nullptr) {
-                throw std::runtime_error(std::string("couldn't find handler for message ") + typeid(*msg).name());
+                throw std::runtime_error(std::string("can't find handler for message ") + typeid(msg_ref).name());
             }
 
-            return std::invoke(method, *this, *msg);
+            std::invoke(method, this, std::move(msg));
         }
     };
 
-    class MessageTransformer : public MessageReciever, public MessageGenerator {};
+    class MessageReciever : public StaticMessageReciever {
+    public:
+        virtual void update() {};
+    };
+
+    class MessageTransformer : public StaticMessageReciever, public StaticMessageGenerator {};
+
+    class MessagePipe : public MessageTransformer {
+    public:
+        void handleMessage(std::unique_ptr<const Message> msg)
+        {
+            const Message &msg_ref = *msg;
+            HandlerMethod method = getHandlerFor(msg_ref);
+            if (method == nullptr) {
+                push(std::move(msg));
+                return;
+            }
+
+            std::invoke(method, this, std::move(msg));
+        }
+    };
 }
 
 #endif

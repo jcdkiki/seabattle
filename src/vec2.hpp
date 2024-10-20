@@ -14,6 +14,7 @@ namespace seabattle {
         inline vec2 operator+(vec2 v) const { return vec2(x + v.x, y + v.y); }
         inline vec2 operator-(vec2 v) const { return vec2(x - v.x, y - v.y); }
         inline vec2 operator/(int s)  const { return vec2(x / s, y / s); }
+        inline vec2 operator*(int s)  const { return vec2(x * s, y * s); }
 
         inline void operator+=(vec2 v) { x += v.x; y += v.y; }
         inline void operator-=(vec2 v) { x -= v.x; y -= v.y; }

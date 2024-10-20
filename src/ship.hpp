@@ -64,6 +64,15 @@ namespace seabattle {
         inline size_t getSize() const { return size; }
 
         bool isDestroyed() const { return health == 0; };
+        
+        SegmentState operator[](size_t index) const
+        {
+            if (index >= size) {
+                throw std::invalid_argument("Index is too large");
+            }
+
+            return segments[index];
+        }
     };
 }
 

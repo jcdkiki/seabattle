@@ -56,6 +56,10 @@ namespace seabattle {
 
     Field &Field::operator=(Field &&field)
     {
+        if (data) {
+            delete [] data;
+        }
+
         data = field.data;
         size = field.size;
         field.data = nullptr;
@@ -119,7 +123,7 @@ namespace seabattle {
 
     bool Field::attack(vec2 coordinates, bool hidden)
     {
-        bool ok = true;
+        bool ok = false;
 
         Cell &cell = getCell(coordinates);
         if (!hidden) {
@@ -127,12 +131,11 @@ namespace seabattle {
         }
 
         if (cell.ship_segment) {
-            if (*cell.ship_segment == Ship::SegmentState::DESTROYED) {
-                ok = false;
+            if (*cell.ship_segment != Ship::SegmentState::DESTROYED) {
+                ok = true;
             }
             
             cell.ship_segment.damage();
-            return ok;
         }
 
         return ok;
