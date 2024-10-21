@@ -1,5 +1,5 @@
 #include "scanner.hpp"
-#include "messages.hpp"
+#include "messaging/render_messages.hpp"
 #include <memory>
 
 namespace seabattle {

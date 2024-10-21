@@ -1,4 +1,5 @@
 #include "gui_input_device.hpp"
+#include "messaging/input_messages.hpp"
 
 #include <SDL2/SDL.h>
 #include <SDL_keycode.h>

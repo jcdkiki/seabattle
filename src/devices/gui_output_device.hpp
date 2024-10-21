@@ -3,8 +3,8 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include "messaging.hpp"
-#include "messages.hpp"
+#include "messaging/message_reciever.hpp"
+#include "messaging/render_messages.hpp"
 
 namespace seabattle {
     class GUIOutputDevice : public MessageReciever {

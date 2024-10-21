@@ -1,9 +1,8 @@
 #ifndef SEABATTLE_DEVICES_TUI_OUTPUT_DEVICE_HPP_
 #define SEABATTLE_DEVICES_TUI_OUTPUT_DEVICE_HPP_
 
-#include "messaging.hpp"
-#include "messages.hpp"
-#include <cstdint>
+#include "messaging/message_reciever.hpp"
+#include "messaging/render_messages.hpp"
 
 namespace seabattle {
     class TUIOutputDevice : public MessageReciever {

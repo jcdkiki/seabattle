@@ -1,5 +1,5 @@
 #include "tui_input_device.hpp"
-#include "messages.hpp"
+#include "messaging/input_messages.hpp"
 
 #include <csignal>
 #include <unistd.h>
