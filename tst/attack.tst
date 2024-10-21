@@ -8,14 +8,14 @@ r           # done
 
 # place ships
 re
-dde
-dde
-dde
-dde
-dde
-dde
-dde
+sse
+sse
+sse
+sse
+sse
+sse
+sse
 
 # attack 0 0
 e
-q          # quit
+tq          # quit

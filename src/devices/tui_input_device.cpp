@@ -85,7 +85,7 @@ namespace seabattle {
             if (*cur == 't') {
                 raise(SIGTRAP);
                 cur++;
-                break;
+                continue;
             }
 
             for (long int i = 0; i < cnt; i++) {
