@@ -5,9 +5,9 @@
 
 namespace seabattle {
     class DoubleDamage : public IAbility {
-        bool &double_damage_flag;
+        Player &user;
     public:
-        DoubleDamage(Player &user) : double_damage_flag(user.double_damage_flag) {}
+        DoubleDamage(Player &user) : user(user) {}
         void use();
     };
 }

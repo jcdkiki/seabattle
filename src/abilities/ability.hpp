@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-#include "messaging.hpp"
+#include "messaging/message_generator.hpp"
 #include "player.hpp"
 
 namespace seabattle {

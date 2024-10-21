@@ -1,5 +1,4 @@
 #include "tui_output_device.hpp"
-#include "messages.hpp"
 
 #include <unistd.h>
 #include <iostream>

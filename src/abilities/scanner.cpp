@@ -1,5 +1,5 @@
 #include "scanner.hpp"
-#include "messages.hpp"
+#include "messaging/render_messages.hpp"
 #include <memory>
 
 namespace seabattle {
@@ -19,6 +19,7 @@ namespace seabattle {
         }
 
         emplace<LogMessage>("Scanner didn't find anything :(((");
+        emplace<RenderFieldMessage>(RenderFieldMessage::LEFT, field, region);
     }
 
     static bool is_registered  = AbilityRegistry::self().add("Scanner", [](Player &user, Player &target) { return std::make_unique<Scanner>(target); });

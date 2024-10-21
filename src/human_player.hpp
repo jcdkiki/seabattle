@@ -1,11 +1,10 @@
 #ifndef SEABATTLE_HUMAN_PLAYER_HPP_
 #define SEABATTLE_HUMAN_PLAYER_HPP_
 
-#include "ability.hpp"
-#include "messages.hpp"
-#include "messaging.hpp"
+#include "messaging/render_messages.hpp"
+#include "messaging/message_generator.hpp"
 #include "player.hpp"
-#include "ability_manager.hpp"
+#include "abilities/ability_manager.hpp"
 #include <stdexcept>
 
 namespace seabattle {

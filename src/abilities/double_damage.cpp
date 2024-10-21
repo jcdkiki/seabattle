@@ -1,10 +1,10 @@
 #include "double_damage.hpp"
-#include "messages.hpp"
+#include "messaging/render_messages.hpp"
 
 namespace seabattle {
     void DoubleDamage::use()
     {
-        double_damage_flag = true;
+        user.double_damage_flag = true;
         emplace<LogMessage>("You were blessed with Double Damage");
     }
 

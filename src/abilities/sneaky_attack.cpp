@@ -1,5 +1,5 @@
 #include "sneaky_attack.hpp"
-#include "messages.hpp"
+#include "messaging/render_messages.hpp"
 #include <cmath>
 
 namespace seabattle {
