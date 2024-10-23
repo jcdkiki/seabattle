@@ -12,14 +12,14 @@ namespace seabattle {
             for (int x = region.min.x; x < region.max.x; x++) {
                 if (field[vec2(x, y)].ship_segment) {
                     emplace<LogMessage>("Scanner found ship in this region");
-                    emplace<RenderFieldMessage>(RenderFieldMessage::LEFT, field, region);
+                    emplace<RenderFieldMessage>(field, region);
                     return;
                 }
             }
         }
 
         emplace<LogMessage>("Scanner didn't find anything :(((");
-        emplace<RenderFieldMessage>(RenderFieldMessage::LEFT, field, region);
+        emplace<RenderFieldMessage>(field, region);
     }
 
     static bool is_registered  = AbilityRegistry::self().add("Scanner", [](Player &user, Player &target) { return std::make_unique<Scanner>(target); });

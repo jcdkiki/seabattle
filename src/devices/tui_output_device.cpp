@@ -1,4 +1,5 @@
 #include "tui_output_device.hpp"
+#include "messaging/render_messages.hpp"
 
 #include <unistd.h>
 #include <iostream>
@@ -52,13 +53,7 @@ namespace seabattle {
 
     void TUIOutputDevice::handleRenderFieldMessage(std::unique_ptr<const RenderFieldMessage> msg)
     {
-        if (msg->location == RenderFieldMessage::LEFT) {
-            std::cout << "LEFT FIELD:" << std::endl;
-        }
-        else {
-            std::cout << "RIGHT FIELD:" << std::endl;
-        }
-
+        std::cout << "FIELD:" << std::endl;
         drawField(msg->field, msg->cursor);
     }
 
@@ -67,10 +62,16 @@ namespace seabattle {
         std::cout << "Field size: " << msg->size.x << ' ' << msg->size.y << std::endl; 
     }
 
+    void TUIOutputDevice::handleRenderCursorMessage(std::unique_ptr<const RenderCursorMessage> msg)
+    {
+        std::cout << "Your choice: " << msg->position.x << ' ' << msg->position.y << std::endl;
+    }
+
     TUIOutputDevice::TUIOutputDevice()
     {
         registerHandler<LogMessage>((HandlerMethod)&TUIOutputDevice::handleLogMessage);
         registerHandler<RenderFieldMessage>((HandlerMethod)&TUIOutputDevice::handleRenderFieldMessage);
         registerHandler<RenderFieldPreviewMessage>((HandlerMethod)&TUIOutputDevice::handleRenderFieldPreviewMessage);
+        registerHandler<RenderCursorMessage>((HandlerMethod)&TUIOutputDevice::handleRenderCursorMessage);
     }
 }

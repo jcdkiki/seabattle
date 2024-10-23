@@ -77,7 +77,7 @@ namespace seabattle {
         bbox2 field_bbox = getBoundingBox();
 
         if (!field_bbox.contains(ship_bbox)) {
-            throw std::invalid_argument("Ship is located outsie the field");
+            throw IllegalShipPositionException();
         }
 
         ship_bbox.min -= vec2(1, 1);
@@ -88,7 +88,7 @@ namespace seabattle {
         for (int y = ship_bbox.min.y; y < ship_bbox.max.y; y++) {
             for (int x = ship_bbox.min.x; x < ship_bbox.max.x; x++) {
                 if (getCell(vec2(x, y)).ship_segment) {
-                    throw std::invalid_argument("Ship intersects area that need to be free");
+                    throw IllegalShipPositionException();
                 }
             }
         }
@@ -141,7 +141,7 @@ namespace seabattle {
     Field::Cell &Field::getCell(vec2 coordinates)
     {
         if (!this->getBoundingBox().contains(coordinates)) {
-            throw std::invalid_argument("invalid coordinates");
+            throw IllegalCoordinatesException();
         }
         return data[coordinates.x + coordinates.y * size.x];
     }
@@ -149,16 +149,8 @@ namespace seabattle {
     const Field::Cell &Field::operator[](vec2 coordinates) const
     {
         if (!this->getBoundingBox().contains(coordinates)) {
-            throw std::invalid_argument("invalid coordinates");
+            throw IllegalCoordinatesException();
         }
         return data[coordinates.x + coordinates.y * size.x];
-    }
-
-    vec2 Field::worldToScreenCoord(vec2 coordinates)
-    {
-        return vec2(
-            CELL_SIZE.x * coordinates.x + CELL_SIZE.x/2,
-            CELL_SIZE.y * coordinates.y + CELL_SIZE.y/2
-        );
     }
 }

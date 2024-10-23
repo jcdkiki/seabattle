@@ -1,5 +1,4 @@
 #include "ability.hpp"
-#include <iostream>
 
 namespace seabattle {
     AbilityRegistry &AbilityRegistry::self()

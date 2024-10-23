@@ -5,7 +5,7 @@
 #include "message_reciever.hpp"
 
 namespace seabattle {
-    class MessageTransformer : public StaticMessageReciever, public StaticMessageGenerator {};
+    class MessageTransformer : public MessageReciever, public MessageGenerator {};
 }
 
 #endif

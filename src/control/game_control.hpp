@@ -3,38 +3,16 @@
 
 #include "game_state.hpp"
 #include "messaging/input_messages.hpp"
+#include "messaging/render_messages.hpp"
 
 namespace seabattle {
     class GameControl : public MessageGenerator {
     protected:
         GameState &state;
 
-        bool handleXYInput(vec2 &vec, const InputMessage &msg)
-        {
-            switch (msg.action) {
-                case InputMessage::CURSOR_RIGHT: vec.x++; break;
-                case InputMessage::CURSOR_LEFT: vec.x--; break;
-                case InputMessage::CURSOR_UP: vec.y--; break;
-                case InputMessage::CURSOR_DOWN: vec.y++; break;
-                default: return false;
-            }
-
-            emplace<LogMessage>("Your input: " + std::to_string(vec.x) + "x" + std::to_string(vec.y));
-            return true;
-        }
-
-        bool handleXInput(int &x, const InputMessage &msg)
-        {
-            switch (msg.action) {
-                case InputMessage::CURSOR_RIGHT: x++; break;
-                case InputMessage::CURSOR_LEFT: x--; break;
-                default: return false;
-            }
-
-            emplace<LogMessage>("Your choice: " + std::to_string(x));
-            return true;
-        }
-
+        bool handleXYInput(vec2 &vec, const InputMessage &msg);
+        bool handleXInput(int &x, const InputMessage &msg);
+        
     public:
         GameControl(GameState &state) : state(state) {}
         virtual ~GameControl() {};

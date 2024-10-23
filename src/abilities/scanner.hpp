@@ -4,7 +4,7 @@
 #include "ability.hpp"
 
 namespace seabattle {
-    class Scanner : public IAbility {
+    class Scanner : public Ability {
         Field &field;
         vec2 position;
     public:

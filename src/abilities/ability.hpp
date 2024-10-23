@@ -9,15 +9,15 @@
 #include "player.hpp"
 
 namespace seabattle {
-    class IAbility : public MessageGenerator {;
+    class Ability : public MessageGenerator {;
     public:
         virtual void use() = 0;
-        virtual ~IAbility() {}
+        virtual ~Ability() {}
     };
 
     class AbilityRegistry {
     public:
-        using FactoryFn = std::function<std::unique_ptr<IAbility>(Player &user, Player &target)>;
+        using FactoryFn = std::function<std::unique_ptr<Ability>(Player &user, Player &target)>;
 
         struct Entry {
             const char *name;

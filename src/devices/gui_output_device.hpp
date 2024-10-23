@@ -12,14 +12,20 @@ namespace seabattle {
         SDL_Window *window;
         TTF_Font *font;
 
-        uint64_t log_time;
-        std::string log_message;
+        constexpr static int FONT_SIZE = 20;
+        constexpr static int N_MESSAGES = 4;
+        uint64_t log_time[4];
+        std::string log_message[4];
+        int current_message;
+        uint64_t cursor_time;
+        vec2 cursor_position;
 
         void drawField(vec2 pos, const Field &field, bbox2 cursor);
     
         void handleLogMessage(std::unique_ptr<const LogMessage> msg);
         void handleRenderFieldMessage(std::unique_ptr<const RenderFieldMessage> msg);
         void handleRenderFieldPreviewMessage(std::unique_ptr<const RenderFieldPreviewMessage> msg);
+        void handleRenderCursorMessage(std::unique_ptr<const RenderCursorMessage> msg);
     public:
         GUIOutputDevice();
         ~GUIOutputDevice();

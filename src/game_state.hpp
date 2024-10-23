@@ -8,8 +8,6 @@ namespace seabattle {
     struct GameState {
         HumanPlayer player;
         Player opponent;
-
-        GameState() : player(opponent) {}
     };
 }
 

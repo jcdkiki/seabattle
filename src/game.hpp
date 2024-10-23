@@ -1,8 +1,10 @@
-#ifndef SEABATTLE_GAME_H_
-#define SEABATTLE_GAME_H_
+#ifndef SEABATTLE_GAME_HPP_
+#define SEABATTLE_GAME_HPP_
 
 #include "messaging/message_pipe.hpp"
-#include "control/setup_field_control.hpp"
+#include "messaging/game_messages.hpp"
+#include "game_state.hpp"
+#include "control/game_control.hpp"
 
 namespace seabattle {
     class Game : public MessagePipe {
@@ -12,52 +14,12 @@ namespace seabattle {
         bool is_running;
 
     public:
-        bool isRunning()
-        {
-            return is_running;
-        }
+        Game();
+        inline bool isRunning() { return is_running; }
 
-        void handleInput(std::unique_ptr<const InputMessage> msg)
-        {
-            if (msg->action == InputMessage::BACK) {
-                is_running = false;
-                return;
-            }
-
-            control->handleInput(std::move(msg));
-
-            while (!control->empty()) {
-                this->handleMessage(std::move(control->pop()));
-            }
-        }
-
-        void handleChangeControl(std::unique_ptr<const ChangeControlMessage> msg)
-        {
-            control.reset(msg->new_control);
-        }
-
-        void update(MessageGenerator &input, MessageReciever &output)
-        {
-            input.update();
-            while (!input.empty()) {
-                this->handleMessage(std::move(input.pop()));
-            }
-
-            while (!state.player.empty()) {
-                this->handleMessage(std::move(state.player.pop()));
-            }
-
-            while (!this->empty()) {
-                output.handleMessage(std::move(this->pop()));
-            }
-            output.update();
-        }
-
-        Game() : is_running(true), control(new SetupFieldControl(state))
-        {
-            registerHandler<InputMessage>((HandlerMethod)&Game::handleInput);
-            registerHandler<ChangeControlMessage>((HandlerMethod)&Game::handleChangeControl);
-        }
+        void handleInput(std::unique_ptr<const InputMessage> msg);
+        void handleChangeControl(std::unique_ptr<const ChangeControlMessage> msg);
+        void update(MessageGenerator &input, MessageReciever &output);
     };
 }
 

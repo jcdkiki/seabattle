@@ -10,9 +10,9 @@
 #include "messaging/message.hpp"
 
 namespace seabattle {
-class StaticMessageReciever {
+class MessageReciever {
     protected:
-        using HandlerMethod = void(StaticMessageReciever::*)(std::unique_ptr<const Message>);
+        using HandlerMethod = void(MessageReciever::*)(std::unique_ptr<const Message>);
         std::unordered_map<std::type_index, HandlerMethod> handlers;
     
         HandlerMethod getHandlerFor(const Message &msg)
@@ -31,6 +31,7 @@ class StaticMessageReciever {
         }
 
     public:
+        virtual void update() {};
         virtual void handleMessage(std::unique_ptr<const Message> msg)
         {
             const Message &msg_ref = *msg;
@@ -41,11 +42,6 @@ class StaticMessageReciever {
 
             std::invoke(method, this, std::move(msg));
         }
-    };
-
-    class MessageReciever : public StaticMessageReciever {
-    public:
-        virtual void update() {};
     };
 }
 

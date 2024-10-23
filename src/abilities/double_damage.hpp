@@ -4,7 +4,7 @@
 #include "ability.hpp"
 
 namespace seabattle {
-    class DoubleDamage : public IAbility {
+    class DoubleDamage : public Ability {
         Player &user;
     public:
         DoubleDamage(Player &user) : user(user) {}

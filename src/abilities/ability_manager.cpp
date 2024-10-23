@@ -1,35 +1,49 @@
 #include "ability_manager.hpp"
 #include "ability.hpp"
 #include <random>
+#include <vector>
 #include <algorithm>
 
 namespace seabattle {
-    AbilityManager::AbilityManager(Player &user, Player &target)
+    AbilityManager::AbilityManager()
     {
         AbilityRegistry &registry = AbilityRegistry::self();
+        std::vector<AbilityRegistry::FactoryFn> factories;
         for (auto entry : registry) {
-            abilities.push_back(entry.factory);
+            factories.push_back(entry.factory);
         }
-        std::shuffle(abilities.begin(), abilities.end(), std::default_random_engine(time(NULL)));
+        std::shuffle(factories.begin(), factories.end(), std::default_random_engine(time(NULL)));
+
+        for (auto factory : factories) {
+            abilities.push(factory);
+        }
     }
 
     const char *AbilityManager::addRandomAbility()
     {
         AbilityRegistry &registry = AbilityRegistry::self();
         const AbilityRegistry::Entry &entry = *(registry.begin() + (rand() % registry.count())); 
-        abilities.push_back(entry.factory);
+        abilities.push(entry.factory);
         return entry.name;
     }
 
-    AbilityRegistry::FactoryFn AbilityManager::pop()
+    AbilityRegistry::FactoryFn AbilityManager::top()
     {
         if (this->empty()) {
-            throw std::runtime_error("AbilityManager`s queue is empty");
+            throw NoAbilitiesException();
         }
 
         auto res = abilities.front();
-        abilities.erase(abilities.begin());
         return res;
+    }
+
+    void AbilityManager::pop()
+    {
+        if (this->empty()) {
+            throw NoAbilitiesException();
+        }
+
+        abilities.pop();
     }
 
     bool AbilityManager::empty()

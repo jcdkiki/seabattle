@@ -8,7 +8,7 @@
 #include "message.hpp"
 
 namespace seabattle {
-    class StaticMessageGenerator {
+    class MessageGenerator {
     private:
         std::queue<std::unique_ptr<const Message>> messages;
     
@@ -26,6 +26,7 @@ namespace seabattle {
         }
     
     public:
+        virtual void update() {};
         bool empty()
         {
             return messages.size() == 0;
@@ -41,11 +42,6 @@ namespace seabattle {
             messages.pop();
             return std::move(msg);
         }
-    };
-
-    class MessageGenerator : public StaticMessageGenerator {
-    public:
-        virtual void update() {};
     };
 }
 

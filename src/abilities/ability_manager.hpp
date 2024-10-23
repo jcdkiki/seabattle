@@ -1,19 +1,24 @@
 #ifndef SEABATTLE_ABILITY_MANAGER_HPP_
 #define SEABATTLE_ABILITY_MANAGER_HPP_
 
-#include <vector>
 #include "ability.hpp"
-#include "player.hpp"
+#include "exception.hpp"
 
 namespace seabattle {
     class AbilityManager {
-        std::vector<AbilityRegistry::FactoryFn> abilities;
+        std::queue<AbilityRegistry::FactoryFn> abilities;
     public:
-        AbilityManager(Player &user, Player &target);
+        AbilityManager();
 
         const char *addRandomAbility();
         bool empty();
-        AbilityRegistry::FactoryFn pop();
+        AbilityRegistry::FactoryFn top();
+        void pop();
+    };
+
+    class NoAbilitiesException : public SeabattleException {
+    public:
+        const char *what() { return "You have no abilities"; }
     };
 }
 

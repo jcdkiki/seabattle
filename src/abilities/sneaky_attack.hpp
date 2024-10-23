@@ -4,7 +4,7 @@
 #include "ability.hpp"
 
 namespace seabattle {
-    class SneakyAttack : public IAbility {
+    class SneakyAttack : public Ability {
         ShipManager &ships;
     public:
         SneakyAttack(Player &target) : ships(target.ships) {}

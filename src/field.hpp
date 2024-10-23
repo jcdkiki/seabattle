@@ -1,12 +1,21 @@
 #ifndef SEABATTLE_FIELD_H_
 #define SEABATTLE_FIELD_H_
 
-#include <vector>
-
+#include "exception.hpp"
 #include "vec2.hpp"
 #include "ship.hpp"
 
 namespace seabattle {
+    class IllegalShipPositionException : public SeabattleException {
+    public:
+        const char *what() { return "Illegal ship position"; }
+    };
+
+    class IllegalCoordinatesException : public SeabattleException {
+    public:
+        const char *what() { return "Illegal coordinates"; }
+    };
+
     class Field {
     public:
         struct Cell {
@@ -38,8 +47,6 @@ namespace seabattle {
         inline bbox2 getBoundingBox() const { return bbox2(vec2(0, 0), size);  }
         inline vec2 getSize() const { return size; }
         const Cell &operator[](vec2 coordinates) const;
-
-        static vec2 worldToScreenCoord(vec2 coordinates);
     };
 }
 

@@ -12,7 +12,7 @@ namespace seabattle {
         std::vector<Ship> ships;
 
     public:
-        typedef std::vector<Ship>::iterator Iterator;
+        using Iterator = std::vector<Ship>::iterator;
 
         ShipManager(std::initializer_list<size_t> ship_size_list = {});
         

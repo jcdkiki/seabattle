@@ -11,6 +11,7 @@ namespace seabattle {
         void handleLogMessage(std::unique_ptr<const LogMessage> msg);
         void handleRenderFieldMessage(std::unique_ptr<const RenderFieldMessage> msg);
         void handleRenderFieldPreviewMessage(std::unique_ptr<const RenderFieldPreviewMessage> msg);
+        void handleRenderCursorMessage(std::unique_ptr<const RenderCursorMessage> msg);
     public:
         TUIOutputDevice();
 

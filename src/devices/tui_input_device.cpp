@@ -28,28 +28,6 @@ namespace seabattle {
         }
     }
 
-    inline const char *msg2str(InputMessage::Action action)
-    {
-        switch (action) {
-            case InputMessage::CURSOR_UP:
-                return "CURSOR_UP";
-            case InputMessage::CURSOR_DOWN:
-                return "CURSOR_DOWN";
-            case InputMessage::CURSOR_LEFT:
-                return "CURSOR_LEFT";
-            case InputMessage::CURSOR_RIGHT:
-                return "CURSOR_RIGHT";
-            case InputMessage::PRIMARY_ACTION:
-                return "PRIMARY_ACTION";
-            case InputMessage::SECONDARY_ACTION:
-                return "SECONDARY_ACTION";
-            case InputMessage::BACK:
-                return "BACK";
-            case InputMessage::INVALID:
-                return "INVALID";
-        }
-    }
-
     void TUIInputDevice::update()
     {
         struct timeval tv;
@@ -83,7 +61,8 @@ namespace seabattle {
             }
 
             if (*cur == 't') {
-                raise(SIGTRAP);
+                asm("int $3"); // dirty hack to make gdb breakpoint
+                //raise(SIGINT);
                 cur++;
                 continue;
             }
