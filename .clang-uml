@@ -66,6 +66,10 @@ diagrams:
         - seabattle::TUIOutputDevice
         - seabattle::GUIInputDevice
         - seabattle::GUIOutputDevice
+        - seabattle::SeabattleException
+        - seabattle::NoAbilitiesException
+        - seabattle::IllegalShipPositionException
+        - seabattle::IllegalCoordinatesExceptio
   
   devices-diagram:
     type: class
