@@ -1,12 +1,11 @@
-#include "gui_output_device.hpp"
-#include "messaging/render_messages.hpp"
+#include "gui_game_renderer.hpp"
 #include <SDL_pixels.h>
 #include <SDL_surface.h>
 #include <SDL_timer.h>
 #include <climits>
 
 namespace seabattle {
-    void GUIOutputDevice::update()
+    void GUIGameRenderer::update()
     {
         SDL_Rect rect;
 
@@ -17,14 +16,14 @@ namespace seabattle {
         SDL_FillRect(win_surface, &rect, SDL_MapRGB(win_surface->format, 127, 127, 127));
 
         rect = {
-            .x = 2, .y = 10 + 7 + 16*cursor_position.y,
+            .x = 2, .y = 10 + 7 + 16*cursor.min.y,
             .w = 6, .h = 2
         };
 
         SDL_FillRect(win_surface, &rect, SDL_MapRGB(win_surface->format, 0, 0, 0));
 
         rect = {
-            .x = 10 + 7 + 16*cursor_position.x, .y = 2,
+            .x = 10 + 7 + 16*cursor.min.x, .y = 2,
             .w = 2, .h = 6
         };
 
@@ -63,7 +62,7 @@ namespace seabattle {
         SDL_Delay(10);
     }
         
-    void GUIOutputDevice::drawField(vec2 pos, const Field &field, bbox2 cursor)
+    void GUIGameRenderer::drawField(vec2 pos, const Field &field)
     {
         vec2 size = field.getSize();
         for (int y = 0; y < size.y; y++) {
@@ -100,35 +99,26 @@ namespace seabattle {
         }
     }
 
-    void GUIOutputDevice::handleLogMessage(std::unique_ptr<const LogMessage> msg)
+    void GUIGameRenderer::operator<<(std::string_view text)
     {
         current_message = (current_message + 1) % N_MESSAGES;
-        log_message[current_message] = msg->text;
+        log_message[current_message] = text;
         log_time[current_message] = SDL_GetTicks64();
     }
 
-    void GUIOutputDevice::handleRenderFieldMessage(std::unique_ptr<const RenderFieldMessage> msg)
+    void GUIGameRenderer::operator<<(const Field &field)
     {
         vec2 pos = vec2(10, 10);
-        drawField(pos, msg->field, msg->cursor);
+        drawField(pos, field);
     }
 
-    void GUIOutputDevice::handleRenderFieldPreviewMessage(std::unique_ptr<const RenderFieldPreviewMessage> msg)
+    void GUIGameRenderer::operator<<(bbox2 cursor)
     {
-        SDL_Rect rect = {
-            .x = 10, .y = 10,
-            .w = msg->size.x * 16, .h = msg->size.y * 16
-        };
-        SDL_FillRect(win_surface, &rect, SDL_MapRGB(win_surface->format, 160, 160, 0));
+        this->cursor = cursor;
     }
 
-    GUIOutputDevice::GUIOutputDevice()
+    GUIGameRenderer::GUIGameRenderer()
     {
-        registerHandler<LogMessage>((HandlerMethod)&GUIOutputDevice::handleLogMessage);
-        registerHandler<RenderFieldMessage>((HandlerMethod)&GUIOutputDevice::handleRenderFieldMessage);
-        registerHandler<RenderFieldPreviewMessage>((HandlerMethod)&GUIOutputDevice::handleRenderFieldPreviewMessage);
-        registerHandler<RenderCursorMessage>((HandlerMethod)&GUIOutputDevice::handleRenderCursorMessage);
-
         if (SDL_Init( SDL_INIT_EVERYTHING ) < 0) {
             throw std::runtime_error("Error initializing SDL: " + std::string(SDL_GetError()));
         } 
@@ -155,14 +145,8 @@ namespace seabattle {
         font = TTF_OpenFont("assets/font.ttf", FONT_SIZE);
         current_message = N_MESSAGES - 1;
     }
-    
-    void GUIOutputDevice::handleRenderCursorMessage(std::unique_ptr<const RenderCursorMessage> msg)
-    {
-        cursor_time = SDL_GetTicks64();
-        cursor_position = msg->position;
-    }
 
-    GUIOutputDevice::~GUIOutputDevice()
+    GUIGameRenderer::~GUIGameRenderer()
     {
         TTF_CloseFont(font);
         SDL_DestroyWindow(window);

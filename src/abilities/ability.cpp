@@ -8,7 +8,7 @@ namespace seabattle {
     }
         
     bool AbilityRegistry::add(const char *name, FactoryFn factory) {
-        factories.push_back({name, factory});
+        factories.push_back(Entry(name, typeid(int), factory));
         return true;
     }
 }

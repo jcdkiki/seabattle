@@ -1,46 +1,31 @@
 #include "game.hpp"
-#include "control/setup_field_control.hpp"
+#include "input_messages.hpp"
+#include "state/game_state.hpp"
+#include "state/setup_field_state.hpp"
 
 namespace seabattle {
-    void Game::handleInput(std::unique_ptr<const InputMessage> msg)
+    Game::Game(GameRenderer &renderer) : MessagePipe(renderer),
+        is_running(true), state(new SetupFieldState(*this)) 
+    {}
+
+    void Game::operator<<(AtomicInputMessage message)
     {
-        if (msg->action == InputMessage::BACK) {
-            is_running = false;
+        if (message.kind == AtomicInputMessage::QUIT) {
+            this->stop();
             return;
         }
 
-        control->handleInput(std::move(msg));
-
-        while (!control->empty()) {
-            this->handleMessage(std::move(control->pop()));
-        }
+        *state << message;
     }
 
-    void Game::handleChangeControl(std::unique_ptr<const ChangeControlMessage> msg)
+    void Game::changeState(GameState *new_state)
     {
-        control.reset(msg->new_control);
+        delete state;
+        state = new_state;
     }
 
-    void Game::update(MessageGenerator &input, MessageReciever &output)
+    Game::~Game()
     {
-        input.update();
-        while (!input.empty()) {
-            this->handleMessage(std::move(input.pop()));
-        }
-
-        while (!state.player.empty()) {
-            this->handleMessage(std::move(state.player.pop()));
-        }
-
-        while (!this->empty()) {
-            output.handleMessage(std::move(this->pop()));
-        }
-        output.update();
-    }
-
-    Game::Game() : is_running(true), control(new SetupFieldControl(state))
-    {
-        registerHandler<InputMessage>((HandlerMethod)&Game::handleInput);
-        registerHandler<ChangeControlMessage>((HandlerMethod)&Game::handleChangeControl);
+        delete state;
     }
 }

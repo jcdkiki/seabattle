@@ -9,9 +9,10 @@ namespace seabattle {
     {
         AbilityRegistry &registry = AbilityRegistry::self();
         std::vector<AbilityRegistry::FactoryFn> factories;
-        for (auto entry : registry) {
+        for (const auto &entry : registry) {
             factories.push_back(entry.factory);
         }
+        
         std::shuffle(factories.begin(), factories.end(), std::default_random_engine(time(NULL)));
 
         for (auto factory : factories) {

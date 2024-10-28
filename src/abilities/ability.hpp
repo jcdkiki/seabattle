@@ -3,13 +3,13 @@
 
 #include <functional>
 #include <memory>
+#include <typeinfo>
 #include <vector>
 
-#include "messaging/message_generator.hpp"
 #include "player.hpp"
 
 namespace seabattle {
-    class Ability : public MessageGenerator {;
+    class Ability {;
     public:
         virtual void use() = 0;
         virtual ~Ability() {}
@@ -21,7 +21,11 @@ namespace seabattle {
 
         struct Entry {
             const char *name;
+            std::type_index &type;
             FactoryFn factory;
+
+            Entry(const char *name, std::type_index &type, FactoryFn factory) :
+                name(name), type(type), factory(factory) {}
         };
 
         using Iterator = std::vector<Entry>::const_iterator;
@@ -36,6 +40,11 @@ namespace seabattle {
         inline Iterator end() { return factories.end(); }
 
         bool add(const char *name, FactoryFn factory);
+
+        static void dynamicDispatch()
+        {
+
+        }
     };
 }
 

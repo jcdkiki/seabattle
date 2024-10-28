@@ -1,34 +1,32 @@
-#include "tui_input_device.hpp"
-#include "messaging/input_messages.hpp"
+#include "tui_game_input.hpp"
 
-#include <csignal>
-#include <unistd.h>
 #include <iostream>
+#include <unistd.h>
 
 namespace seabattle {
-    inline InputMessage::Action char2message(char c)
+    inline AtomicInputMessage char2message(char c)
     {
         switch (c) {
         case 'w':
-            return InputMessage::CURSOR_UP;
+            return AtomicInputMessage(AtomicInputMessage::CURSOR_UP);
         case 's':
-            return InputMessage::CURSOR_DOWN;
+            return AtomicInputMessage(AtomicInputMessage::CURSOR_DOWN);
         case 'a':
-            return InputMessage::CURSOR_LEFT;
+            return AtomicInputMessage(AtomicInputMessage::CURSOR_LEFT);
         case 'd':
-            return InputMessage::CURSOR_RIGHT;
+            return AtomicInputMessage(AtomicInputMessage::CURSOR_RIGHT);
         case 'e':
-            return InputMessage::PRIMARY_ACTION;
+            return AtomicInputMessage(AtomicInputMessage::PRIMARY_ACTION);
         case 'r':
-            return InputMessage::SECONDARY_ACTION;
+            return AtomicInputMessage(AtomicInputMessage::SECONDARY_ACTION);
         case 'q':
-            return InputMessage::BACK;
+            return AtomicInputMessage(AtomicInputMessage::QUIT);
         default:
-            return InputMessage::INVALID;
+            return AtomicInputMessage(AtomicInputMessage::INVALID);   
         }
     }
 
-    void TUIInputDevice::update()
+    void TUIGameInput::operator>>(Game &game)
     {
         struct timeval tv;
         fd_set fds;
@@ -61,16 +59,16 @@ namespace seabattle {
             }
 
             if (*cur == 't') {
-                asm("int $3"); // dirty hack to make gdb breakpoint
-                //raise(SIGINT);
+                asm("int $3"); // dirty hack to make a gdb breakpoint
                 cur++;
                 continue;
             }
 
             for (long int i = 0; i < cnt; i++) {
-                InputMessage::Action action = char2message(*cur);
-                if (action != InputMessage::INVALID)
-                    this->emplace<InputMessage>(action);
+                AtomicInputMessage msg = char2message(*cur);
+                if (msg.kind != AtomicInputMessage::INVALID) {
+                    game << msg;
+                }
             }
             cur++;
         }

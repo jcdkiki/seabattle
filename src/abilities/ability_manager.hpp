@@ -3,6 +3,7 @@
 
 #include "ability.hpp"
 #include "exception.hpp"
+#include <queue>
 
 namespace seabattle {
     class AbilityManager {

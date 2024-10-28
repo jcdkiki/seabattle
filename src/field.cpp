@@ -5,6 +5,8 @@
 #include <cstring>
 #include <utility>
 
+#include <iostream>
+
 namespace seabattle {
     Field::Field(int width, int height)
         : size(width, height)
@@ -23,6 +25,7 @@ namespace seabattle {
 
     Field::Field(vec2 size) : Field(size.x, size.y)
     {
+        std::cout << "FIELD " << size.x << ' ' << size.y << std::endl;
         for (size_t i = 0; i < size.x * size.y; i++) {
             data[i].has_fog = true;
             data[i].ship_segment = Ship::SegmentView();
@@ -31,16 +34,20 @@ namespace seabattle {
 
     Field::Field(const Field &field) : Field(field.size.x, field.size.y)
     {
+        std::cout << "COPY FIELD" << std::endl;
         memcpy(data, field.data, sizeof(*data) * size.x * size.y);
     }
 
     Field::Field(Field &&field) :
           data(std::exchange(field.data, nullptr)),
           size(std::exchange(field.size, vec2(0, 0)))
-    {}
+    {
+        std::cout << "MOVE FIELD" << std::endl;
+    }
 
     Field &Field::operator=(const Field &field)
     {
+        std::cout << "= ref FIELD" << std::endl;
         if (data) {
             delete [] data;
         }
@@ -53,6 +60,7 @@ namespace seabattle {
 
     Field &Field::operator=(Field &&field)
     {
+        std::cout << "= && FIELD" << std::endl;
         if (data) {
             delete [] data;
         }

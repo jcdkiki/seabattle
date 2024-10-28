@@ -1,12 +1,12 @@
 #ifndef SEABATTLE_DEVICES_TUI_INPUT_DEVICE_HPP_
 #define SEABATTLE_DEVICES_TUI_INPUT_DEVICE_HPP_
 
-#include "messaging/message_generator.hpp"
+#include "game_input.hpp"
 
 namespace seabattle {
-    class TUIInputDevice : public MessageGenerator {
+    class TUIGameInput : public GameInput {
     public:
-        void update();
+        void operator>>(Game &game);
     };
 }
 
