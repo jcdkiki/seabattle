@@ -1,4 +1,5 @@
 #include "double_damage.hpp"
+#include "abilities/ability_registration.hpp"
 
 namespace seabattle {
     void DoubleDamage::use()
@@ -6,5 +7,5 @@ namespace seabattle {
         user.double_damage_flag = true;
     }
 
-    static bool is_registered  = AbilityRegistry::self().add("Double damage", [](Player &user, Player &target) { return std::make_unique<DoubleDamage>(user); });
+    static AbilityRegistration<DoubleDamage> reg("Double Damage");
 }

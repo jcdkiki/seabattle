@@ -1,4 +1,5 @@
 #include "scanner.hpp"
+#include "ability_registration.hpp"
 
 namespace seabattle {
     void Scanner::use()
@@ -15,5 +16,5 @@ namespace seabattle {
         }
     }
 
-    static bool is_registered  = AbilityRegistry::self().add("Scanner", [](Player &user, Player &target) { return std::make_unique<Scanner>(target); });
+    static AbilityRegistration<Scanner> reg("Scanner");    
 }

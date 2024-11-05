@@ -1,4 +1,5 @@
 #include "sneaky_attack.hpp"
+#include "ability_registration.hpp"
 #include <cmath>
 
 namespace seabattle {
@@ -23,5 +24,5 @@ namespace seabattle {
         ship.damageSegment(segment);
     }
 
-    static bool is_registered  = AbilityRegistry::self().add("Sneaky Attack", [](Player &user, Player &target) { return std::make_unique<SneakyAttack>(target); });
+    static AbilityRegistration<SneakyAttack> reg("Sneaky Attack");    
 }

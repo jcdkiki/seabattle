@@ -1,9 +1,10 @@
 #include "human_player.hpp"
+#include <memory>
 
 namespace seabattle {
     void HumanPlayer::useAbility(Player &target)
     {
-        auto ability = abilities.top()(*this, target);
+        std::unique_ptr<Ability> ability(abilities.top()->second.generator(*this, target));
         ability->use(); // can throw
         abilities.pop();
     }

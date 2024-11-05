@@ -1,19 +1,19 @@
 #ifndef SEABATTLE_ABILITY_MANAGER_HPP_
 #define SEABATTLE_ABILITY_MANAGER_HPP_
 
-#include "ability.hpp"
+#include "ability_registry.hpp"
 #include "exception.hpp"
 #include <queue>
 
 namespace seabattle {
     class AbilityManager {
-        std::queue<AbilityRegistry::FactoryFn> abilities;
+        std::queue<AbilityRegistry::Entry> abilities;
     public:
         AbilityManager();
 
         const char *addRandomAbility();
         bool empty();
-        AbilityRegistry::FactoryFn top();
+        const AbilityRegistry::Entry &top();
         void pop();
     };
 

@@ -1,5 +1,6 @@
 #include "ability_manager.hpp"
-#include "ability.hpp"
+#include "ability_registry.hpp"
+#include <ctime>
 #include <random>
 #include <vector>
 #include <algorithm>
@@ -8,34 +9,36 @@ namespace seabattle {
     AbilityManager::AbilityManager()
     {
         AbilityRegistry &registry = AbilityRegistry::self();
-        std::vector<AbilityRegistry::FactoryFn> factories;
+        std::vector<const AbilityRegistry::Entry*> entries;
         for (const auto &entry : registry) {
-            factories.push_back(entry.factory);
+            entries.emplace_back(&entry);
         }
         
-        std::shuffle(factories.begin(), factories.end(), std::default_random_engine(time(NULL)));
+        std::shuffle(entries.begin(), entries.end(), std::default_random_engine(time(NULL)));
 
-        for (auto factory : factories) {
-            abilities.push(factory);
+        for (AbilityRegistry::Entry entry = registry.begin(); entry != registry.end(); entry++) {
+            abilities.push(entry);
         }
     }
 
     const char *AbilityManager::addRandomAbility()
     {
         AbilityRegistry &registry = AbilityRegistry::self();
-        const AbilityRegistry::Entry &entry = *(registry.begin() + (rand() % registry.count())); 
-        abilities.push(entry.factory);
-        return entry.name;
+        AbilityRegistry::Entry entry = registry.begin();
+        for (size_t i = (rand() % registry.count()); i > 0; i--)
+            entry++;
+
+        abilities.push(entry);
+        return entry->first;
     }
 
-    AbilityRegistry::FactoryFn AbilityManager::top()
+    const AbilityRegistry::Entry &AbilityManager::top()
     {
         if (this->empty()) {
             throw NoAbilitiesException();
         }
 
-        auto res = abilities.front();
-        return res;
+        return abilities.front();
     }
 
     void AbilityManager::pop()
