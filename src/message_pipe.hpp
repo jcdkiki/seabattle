@@ -4,10 +4,11 @@
 namespace seabattle {
     template<class Parent>
     class MessagePipe {
+    protected:
         Parent &parent;
     public:
         MessagePipe(Parent &parent) : parent(parent) {}
-
+        
         template<class Message>
         void operator<<(const Message &message)
         {

@@ -5,7 +5,7 @@
 
 namespace seabattle {
     Game::Game(GameRenderer &renderer) : MessagePipe(renderer),
-        is_running(true), state(new SetupFieldState(*this)) 
+        is_running(true), state(new SetupFieldState(*this)), player(*this), opponent(*this)
     {}
 
     void Game::operator<<(AtomicInputMessage message)

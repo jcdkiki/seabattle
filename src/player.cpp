@@ -1,15 +1,17 @@
-#include "human_player.hpp"
+#include "player.hpp"
 #include <memory>
 
 namespace seabattle {
-    void HumanPlayer::useAbility(Player &target)
+    void Player::useAbility(Player &target)
     {
-        std::unique_ptr<Ability> ability(abilities.top()->second.generator(*this, target));
+        auto info = abilities.top();
+        std::unique_ptr<Ability> ability(info.generator(*this, target));
         ability->use(); // can throw
+        (*this) << RenderAbilityMessage { .info = info, .ability = *ability };
         abilities.pop();
     }
 
-    void HumanPlayer::attack(Player &target)
+    void Player::attack(Player &target)
     {
         bool ok = target.field.attack(cursor, false);
         if (double_damage_flag) {
@@ -19,7 +21,7 @@ namespace seabattle {
 
         if (ok && target.field[cursor].ship_segment.getShip().isDestroyed()) {
             const char *name = abilities.addRandomAbility();
-            //emplace<LogMessage>(std::string("New ability: ") + name);
+            (*this) << (std::string("New ability: ") + name);
         }
     }
 }

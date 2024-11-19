@@ -7,13 +7,13 @@
 
 namespace seabattle {
     class AbilityManager {
-        std::queue<AbilityRegistry::Entry> abilities;
+        std::queue<AbilityRegistry::AbilityInfo> abilities;
     public:
         AbilityManager();
 
         const char *addRandomAbility();
         bool empty();
-        const AbilityRegistry::Entry &top();
+        const AbilityRegistry::AbilityInfo &top();
         void pop();
     };
 

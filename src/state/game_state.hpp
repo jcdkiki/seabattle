@@ -5,7 +5,6 @@
 #include "vec2.hpp"
 
 #include "player.hpp"
-#include "human_player.hpp"
 
 namespace seabattle {
     class Game;
@@ -13,7 +12,7 @@ namespace seabattle {
     class GameState {
     protected:
         Game &ctx;
-        HumanPlayer &player();
+        Player &player();
         Player &opponent();
 
         bool handleXYInput(vec2 &vec, const AtomicInputMessage msg);

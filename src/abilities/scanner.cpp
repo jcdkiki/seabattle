@@ -10,10 +10,13 @@ namespace seabattle {
         for (int y = region.min.y; y < region.max.y; y++) {
             for (int x = region.min.x; x < region.max.x; x++) {
                 if (field[vec2(x, y)].ship_segment) {
+                    is_found = true;
                     return;
                 }
             }
         }
+
+        is_found = false;
     }
 
     static AbilityRegistration<Scanner> reg("Scanner");    

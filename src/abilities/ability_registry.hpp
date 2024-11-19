@@ -3,12 +3,12 @@
 
 #include <functional>
 #include <map>
-#include "player.hpp"
 #include "ability.hpp"
-#include "game_renderer.hpp"
-
 
 namespace seabattle {
+    class Player;
+    class GameRenderer;
+
     class AbilityRegistry {
     public:
         using GeneratorFn = std::function<Ability*(Player &user, Player &target)>;

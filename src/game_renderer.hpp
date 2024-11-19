@@ -17,11 +17,16 @@ namespace seabattle {
         virtual void operator<<(bbox2 cursor) = 0;
         virtual void operator<<(std::string_view text) = 0;
 
-        virtual void operator<<(const DoubleDamage &ability);
-        virtual void operator<<(const SneakyAttack &ability);
-        virtual void operator<<(const Scanner &ability);
+        virtual void operator<<(const DoubleDamage &ability) = 0;
+        virtual void operator<<(const SneakyAttack &ability) = 0;
+        virtual void operator<<(const Scanner &ability) = 0;
 
         virtual void update() = 0;
+
+        inline void operator<<(const Player::RenderAbilityMessage &msg)
+        {
+            msg.info.render(*this, msg.ability);
+        }
     };
 }
 

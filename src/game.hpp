@@ -2,7 +2,7 @@
 #define SEABATTLE_GAME_CONTEXT_HPP_
 
 #include "message_pipe.hpp"
-#include "human_player.hpp"
+#include "player.hpp"
 #include "game_renderer.hpp"
 #include "input_messages.hpp"
 #include "state/game_state.hpp"
@@ -13,7 +13,7 @@ namespace seabattle {
         bool is_running;
     
     protected:
-        HumanPlayer player;
+        Player player;
         Player opponent;
         friend class GameState;
 

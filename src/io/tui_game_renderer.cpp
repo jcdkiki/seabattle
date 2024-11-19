@@ -51,4 +51,26 @@ namespace seabattle {
             std::cout << std::endl;
         }
     }
+
+    void TUIGameRenderer::operator<<(const DoubleDamage &ability)
+    {
+        (*this) << "You were blessed with double damage!!!!";
+    }
+
+    void TUIGameRenderer::operator<<(const SneakyAttack &ability)
+    {
+        (*this) << "Sneaky attack was performed successfully!!!";
+    }
+
+    void TUIGameRenderer::operator<<(const Scanner &ability)
+    {
+        if (ability.isFound()) {
+            (*this) << "Found ship here!!!!";
+        }
+        else {
+            (*this) << "Nothing here :((((";
+        }
+
+        (*this) << bbox2(ability.getPosition(), ability.getPosition() + vec2(2, 2));
+    }
 }

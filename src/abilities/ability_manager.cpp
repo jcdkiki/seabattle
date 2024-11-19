@@ -9,15 +9,15 @@ namespace seabattle {
     AbilityManager::AbilityManager()
     {
         AbilityRegistry &registry = AbilityRegistry::self();
-        std::vector<const AbilityRegistry::Entry*> entries;
+        std::vector<AbilityRegistry::AbilityInfo> infos;
         for (const auto &entry : registry) {
-            entries.emplace_back(&entry);
+            infos.push_back(entry.second);
         }
         
-        std::shuffle(entries.begin(), entries.end(), std::default_random_engine(time(NULL)));
+        std::shuffle(infos.begin(), infos.end(), std::default_random_engine(time(NULL)));
 
-        for (AbilityRegistry::Entry entry = registry.begin(); entry != registry.end(); entry++) {
-            abilities.push(entry);
+        for (auto info : infos) {
+            abilities.push(info);
         }
     }
 
@@ -28,11 +28,11 @@ namespace seabattle {
         for (size_t i = (rand() % registry.count()); i > 0; i--)
             entry++;
 
-        abilities.push(entry);
+        abilities.push(entry->second);
         return entry->first;
     }
 
-    const AbilityRegistry::Entry &AbilityManager::top()
+    const AbilityRegistry::AbilityInfo &AbilityManager::top()
     {
         if (this->empty()) {
             throw NoAbilitiesException();

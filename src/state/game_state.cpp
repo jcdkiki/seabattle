@@ -2,7 +2,7 @@
 #include "game.hpp"
 
 namespace seabattle {
-    HumanPlayer &GameState::player() { return ctx.player; }
+    Player &GameState::player() { return ctx.player; }
     Player &GameState::opponent() { return ctx.opponent; }
 
     bool GameState::handleXYInput(vec2 &vec, AtomicInputMessage msg)

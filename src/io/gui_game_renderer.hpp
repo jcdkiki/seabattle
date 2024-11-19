@@ -5,27 +5,46 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include "gui/rgba32.hpp"
 
 namespace seabattle {
     class Drawable;
 
     class GUIGameRenderer : public GameRenderer {
-        SDL_Surface *win_surface;
+        SDL_Renderer *renderer;
         SDL_Window *window;
         TTF_Font *font;
 
-        constexpr static int FONT_SIZE = 20;
-        constexpr static int N_MESSAGES = 4;
-        uint64_t log_time[4];
-        std::string log_message[4];
-        int current_message;
-        uint64_t cursor_time;
-        bbox2 cursor;;
+        struct Message {
+            uint64_t time;
+            std::string text;
+        };
 
-        void drawField(vec2 pos, const Field &field);
+        uint64_t cur_time;
+
+        rgba32 tint_color;
+        uint64_t tint_time;
+
+        constexpr static int N_MESSAGES = 4;
+        Message messages[N_MESSAGES];
+        int current_message;
+        bbox2 cursor;
+
+        vec2 field_size;
+        rgba32 *field_color;
+
+        void drawField();
+        void drawTint();
+        void drawCursor();
+        void drawMessages();
+        void setTint(rgba32 color);
     public:
         GUIGameRenderer();
         ~GUIGameRenderer();
+
+        void operator<<(const DoubleDamage &ability);
+        void operator<<(const SneakyAttack &ability);
+        void operator<<(const Scanner &ability);
 
         void operator<<(const Field &field);
         void operator<<(bbox2 cursor);

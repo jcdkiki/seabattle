@@ -18,6 +18,9 @@ namespace seabattle {
 
         inline void operator+=(vec2 v) { x += v.x; y += v.y; }
         inline void operator-=(vec2 v) { x -= v.x; y -= v.y; }
+
+        inline bool operator==(vec2 v) { return x == v.x && y == v.y; }
+        inline bool operator!=(vec2 v) { return x != v.x || y != v.y; }
     };
 
     struct bbox2 {
