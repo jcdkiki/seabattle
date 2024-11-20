@@ -1,5 +1,6 @@
 #include "double_damage.hpp"
-#include "abilities/ability_registration.hpp"
+#include "ability_registration.hpp"
+#include "renderer/game_renderer.hpp"
 
 namespace seabattle {
     void DoubleDamage::use()
@@ -7,5 +8,6 @@ namespace seabattle {
         user.double_damage_flag = true;
     }
 
-    static AbilityRegistration<DoubleDamage> reg("Double Damage");
+    void DoubleDamage::renderBy(GameRenderer &renderer) const { renderer.handle(*this); }
+    static AbilityRegistration<DoubleDamage> reg;
 }

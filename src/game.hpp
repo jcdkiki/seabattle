@@ -1,21 +1,22 @@
 #ifndef SEABATTLE_GAME_CONTEXT_HPP_
 #define SEABATTLE_GAME_CONTEXT_HPP_
 
-#include "message_pipe.hpp"
+#include "ai_controller.hpp"
 #include "player.hpp"
-#include "game_renderer.hpp"
-#include "input_messages.hpp"
-#include "state/game_state.hpp"
+#include "renderer/game_renderer.hpp"
+#include "states/game_state.hpp"
 
 namespace seabattle {
-    struct Game : public MessagePipe<GameRenderer> {
+    class Game {
+        GameRenderer &renderer;
         GameState *state;
+        AIController ai;
         bool is_running;
-    
-    protected:
+        
         Player player;
         Player opponent;
-        friend class GameState;
+        
+        bool is_state_new;
 
     public:
         explicit Game(GameRenderer &renderer);
@@ -23,13 +24,27 @@ namespace seabattle {
         Game(Game &&ctx) = delete;
         ~Game();
 
-        using MessagePipe::operator<<;
-        void operator<<(AtomicInputMessage message);
+        template<class T>
+        void render(const T &object)
+        {
+            renderer.handle(object);
+        }
 
-        void changeState(GameState *new_state);
+        void updateState(GameState *new_state);
+        void handle(InputMessage message);
         
         inline void stop() { is_running = false; }
+        
+        inline Player &getPlayer() { return player; }
+        inline Player &getOpponent() { return opponent; }
+        inline AIController &getAIController() { return ai; }
         inline bool isRunning() { return is_running; }
+
+        friend std::ostream &operator<<(std::ostream &os, Game &game);
+        friend std::istream &operator>>(std::istream &is, Game &game);
+
+        void save();
+        void load();
     };
 }
 

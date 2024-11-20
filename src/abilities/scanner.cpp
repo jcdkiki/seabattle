@@ -1,5 +1,6 @@
 #include "scanner.hpp"
 #include "ability_registration.hpp"
+#include "renderer/game_renderer.hpp"
 
 namespace seabattle {
     void Scanner::use()
@@ -9,7 +10,7 @@ namespace seabattle {
 
         for (int y = region.min.y; y < region.max.y; y++) {
             for (int x = region.min.x; x < region.max.x; x++) {
-                if (field[vec2(x, y)].ship_segment) {
+                if (field[vec2(x, y)].ship_segment && field[vec2(x, y)].has_fog) {
                     is_found = true;
                     return;
                 }
@@ -19,5 +20,6 @@ namespace seabattle {
         is_found = false;
     }
 
-    static AbilityRegistration<Scanner> reg("Scanner");    
+    void Scanner::renderBy(GameRenderer &renderer) const { renderer.handle(*this); }
+    static AbilityRegistration<Scanner> reg;    
 }

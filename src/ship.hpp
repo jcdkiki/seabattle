@@ -1,9 +1,9 @@
 #ifndef SEABATTLE_SHIP_H_
 #define SEABATTLE_SHIP_H_
 
+#include <array>
 #include <cstddef>
 #include <stdexcept>
-#include "vec2.hpp"
 
 namespace seabattle {
     class Ship {
@@ -24,7 +24,7 @@ namespace seabattle {
     private:
         size_t size;
         size_t health;
-        SegmentState segments[MAX_SIZE];
+        std::array<SegmentState, MAX_SIZE> segments;
 
     public:
         class SegmentView {
@@ -56,13 +56,14 @@ namespace seabattle {
                 }
                 return *ship;
             }
+
+            inline size_t getIndex() const { return index; }
         };
 
         explicit Ship(size_t size);
         
         void damageSegment(size_t index);
         inline size_t getSize() const { return size; }
-
         bool isDestroyed() const { return health == 0; };
         
         SegmentState operator[](size_t index) const
@@ -73,6 +74,11 @@ namespace seabattle {
 
             return segments[index];
         }
+
+        typedef std::array<SegmentState, MAX_SIZE>::iterator Iterator;
+        inline Iterator begin() { return segments.begin(); }
+        inline Iterator end()   { return segments.begin() + size; }
+        inline SegmentState &operator[](size_t index) { return segments[index]; }
     };
 }
 

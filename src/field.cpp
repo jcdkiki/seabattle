@@ -5,14 +5,12 @@
 #include <cstring>
 #include <utility>
 
-#include <iostream>
-
 namespace seabattle {
     Field::Field(int width, int height)
         : size(width, height)
     {
         if (width < 0 || height < 0) {
-            throw std::invalid_argument("invalid field size");
+            throw std::invalid_argument("Invalid field size");
         }
 
         if (width != 0 && height != 0) {
@@ -25,7 +23,6 @@ namespace seabattle {
 
     Field::Field(vec2 size) : Field(size.x, size.y)
     {
-        std::cout << "FIELD " << size.x << ' ' << size.y << std::endl;
         for (size_t i = 0; i < size.x * size.y; i++) {
             data[i].has_fog = true;
             data[i].ship_segment = Ship::SegmentView();
@@ -34,20 +31,16 @@ namespace seabattle {
 
     Field::Field(const Field &field) : Field(field.size.x, field.size.y)
     {
-        std::cout << "COPY FIELD" << std::endl;
         memcpy(data, field.data, sizeof(*data) * size.x * size.y);
     }
 
     Field::Field(Field &&field) :
           data(std::exchange(field.data, nullptr)),
           size(std::exchange(field.size, vec2(0, 0)))
-    {
-        std::cout << "MOVE FIELD" << std::endl;
-    }
+    {}
 
     Field &Field::operator=(const Field &field)
     {
-        std::cout << "= ref FIELD" << std::endl;
         if (data) {
             delete [] data;
         }
@@ -60,7 +53,6 @@ namespace seabattle {
 
     Field &Field::operator=(Field &&field)
     {
-        std::cout << "= && FIELD" << std::endl;
         if (data) {
             delete [] data;
         }
@@ -126,27 +118,34 @@ namespace seabattle {
             delete [] data;
     }
 
-    bool Field::attack(vec2 coordinates, bool hidden)
+    Field::AttackResult Field::attack(vec2 coordinates, bool hidden)
     {
-        bool ok = false;
-
         Cell &cell = getCell(coordinates);
         if (!hidden) {
             cell.has_fog = false;
         }
 
-        if (cell.ship_segment) {
-            if (*cell.ship_segment != Ship::SegmentState::DESTROYED) {
-                ok = true;
-            }
-            
-            cell.ship_segment.damage();
+        if (!cell.ship_segment) {
+            return AttackResult::NOTHING;
         }
 
-        return ok;
+        cell.ship_segment.damage();
+
+        if (cell.ship_segment.getShip().isDestroyed()) {
+            return AttackResult::SHIP_DESTROYED;
+        }
+        return AttackResult::SHIP_DAMAGED;
     }
 
     Field::Cell &Field::getCell(vec2 coordinates)
+    {
+        if (!this->getBoundingBox().contains(coordinates)) {
+            throw IllegalCoordinatesException();
+        }
+        return data[coordinates.x + coordinates.y * size.x];
+    }
+
+    Field::Cell &Field::operator[](vec2 coordinates)
     {
         if (!this->getBoundingBox().contains(coordinates)) {
             throw IllegalCoordinatesException();
@@ -159,6 +158,24 @@ namespace seabattle {
         if (!this->getBoundingBox().contains(coordinates)) {
             throw IllegalCoordinatesException();
         }
-        return data[coordinates.x + coordinates.y * size.x];
+        return data[coordinates.x + coordinates.y * size.x]; 
+    }
+
+    void Field::mark(vec2 position)
+    {
+        if (!getBoundingBox().contains(position)) {
+            return;
+        }
+        getCell(position).marked = !getCell(position).marked;
+    }
+
+    std::ostream &operator<<(std::ostream &os, Field &manager)
+    {
+        return os;
+    }
+
+    std::istream &operator>>(std::istream &is, Field &manager)
+    {
+        return is;
     }
 }

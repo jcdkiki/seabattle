@@ -8,8 +8,11 @@ namespace seabattle {
     class SneakyAttack : public Ability {
         ShipManager &ships;
     public:
+        static constexpr const char *name = "Sneaky Attack";
+        
         SneakyAttack(Player &user, Player &target) : ships(target.ships) {}
         void use();
+        void renderBy(GameRenderer &renderer) const;
     };
 }
 
