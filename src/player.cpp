@@ -132,6 +132,9 @@ namespace seabattle {
         is >> player.double_damage_flag;
         
         // ABILITIES
+        while (!player.abilities.empty())
+            player.abilities.pop();
+
         ssize_t count;
         is >> count >> std::ws;
         while (count--) {
