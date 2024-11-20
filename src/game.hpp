@@ -1,25 +1,50 @@
-#ifndef SEABATTLE_GAME_HPP_
-#define SEABATTLE_GAME_HPP_
+#ifndef SEABATTLE_GAME_CONTEXT_HPP_
+#define SEABATTLE_GAME_CONTEXT_HPP_
 
-#include "messaging/message_pipe.hpp"
-#include "messaging/game_messages.hpp"
-#include "game_state.hpp"
-#include "control/game_control.hpp"
+#include "ai_controller.hpp"
+#include "player.hpp"
+#include "renderer/game_renderer.hpp"
+#include "states/game_state.hpp"
 
 namespace seabattle {
-    class Game : public MessagePipe {
-    protected:
-        GameState state;
-        std::unique_ptr<GameControl> control;
+    class Game {
+        GameRenderer &renderer;
+        GameState *state;
+        AIController ai;
         bool is_running;
+        
+        Player player;
+        Player opponent;
+        
+        bool is_state_new;
 
     public:
-        Game();
+        explicit Game(GameRenderer &renderer);
+        Game(const Game &ctx) = delete;
+        Game(Game &&ctx) = delete;
+        ~Game();
+
+        template<class T>
+        void render(const T &object)
+        {
+            renderer.handle(object);
+        }
+
+        void updateState(GameState *new_state);
+        void handle(InputMessage message);
+        
+        inline void stop() { is_running = false; }
+        
+        inline Player &getPlayer() { return player; }
+        inline Player &getOpponent() { return opponent; }
+        inline AIController &getAIController() { return ai; }
         inline bool isRunning() { return is_running; }
 
-        void handleInput(std::unique_ptr<const InputMessage> msg);
-        void handleChangeControl(std::unique_ptr<const ChangeControlMessage> msg);
-        void update(MessageGenerator &input, MessageReciever &output);
+        friend std::ostream &operator<<(std::ostream &os, Game &game);
+        friend std::istream &operator>>(std::istream &is, Game &game);
+
+        void save();
+        void load();
     };
 }
 

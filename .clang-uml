@@ -3,112 +3,37 @@ compilation_database_dir: uml-build/
 # Change to directory where diagram should be written
 output_directory: diagrams
 diagrams:
-  messaging-diagram:
-    type: class
-    glob:
-      - src/*.hpp
-      - src/devices/*.cpp
-      - src/abilities/*.cpp
-      - src/control/*.hpp
-      - src/messaging/*.hpp
-    generate_template_argument_dependencies: false
-    using_namespace:
-      - seabattle
-    include:
-      elements:
-        - seabattle::MessageGenerator
-        - seabattle::MessageReciever
-        - seabattle::StaticMessageGenerator
-        - seabattle::StaticMessageReciever
-        - seabattle::MessagePipe
-        - seabattle::MessageTransformer
-    exclude:
-      relationships:
-        - dependency
-
-  full-diagram:
+  lb3-diagram:
     type: class
     glob:
       - src/*.cpp
-      - src/*.hpp
-      - src/abilities/*.cpp
-      - src/abilities/*.hpp
-      - src/control/*.hpp
-      - src/control/*.cpp
-      - src/messaging/*.hpp
-      - src/messaging/*.cpp
+      - src/input/*.cpp
+      - src/input/gui/*.cpp
+      - src/renderer/*.cpp
+      - src/renderer/gui/*.cpp
+      - src/states/*.cpp
     generate_template_argument_dependencies: false
     using_namespace:
       - seabattle
-    #package_type: directory
-    #generate_packages: true
-    #layout:
-    #  Message:
-    #    - right: Game
-    #    - down: IAbility
-    #    - up: GameControl
     include:
-      namespaces:
-        - seabattle
-    exclude:
-      #relationships:
-      #  - dependency
       elements:
-        - seabattle::vec2
-        - seabattle::bbox2
-        - seabattle::MessageGenerator
-        - seabattle::MessageReciever
-        - seabattle::StaticMessageGenerator
-        - seabattle::StaticMessageReciever
-        - seabattle::MessagePipe
-        - seabattle::MessageTransformer
-        - seabattle::TUIInputDevice
-        - seabattle::TUIOutputDevice
-        - seabattle::GUIInputDevice
-        - seabattle::GUIOutputDevice
-        - seabattle::SeabattleException
-        - seabattle::NoAbilitiesException
-        - seabattle::IllegalShipPositionException
-        - seabattle::IllegalCoordinatesExceptio
-  
-  devices-diagram:
-    type: class
-    glob:
-      - src/devices/*.cpp
-    generate_template_argument_dependencies: false
-    using_namespace:
-      - seabattle
-    include:
-      context:
-        - seabattle::TUIInputDevice
-        - seabattle::GUIInputDevice
-        - seabattle::TUIOutputDevice
-        - seabattle::GUIOutputDevice
-    exclude:
-      namespaces:
-        - std
+        - seabattle::Game
+        - seabattle::GameState
+        - seabattle::GameRenderer
+        - seabattle::GameInput
+        - seabattle::AIActionState
+        - seabattle::AnyKeyState
+        - seabattle::PlaceShipsState
+        - seabattle::PlayerActionState
+        - seabattle::SetupAIState
+        - seabattle::SetupFieldState
+        - seabattle::SetupShipsState
+        - seabattle::Player
+        - seabattle::AIController
+        - seabattle::GUIGameRenderer
+        - seabattle::TUIGameRenderer
+        - seabattle::TUIGameInput
+        - seabattle::GUIGameInput
+    exclude: 
       relationships:
         - dependency
-      elements:
-        - seabattle::vec2
-
-  chaos-diagram:
-    type: class
-    glob:
-      - src/*.cpp
-      - src/*.hpp
-      - src/abilities/*.cpp
-      - src/abilities/*.hpp
-      - src/control/*.hpp
-      - src/control/*.cpp
-      - src/messaging/*.hpp
-      - src/messaging/*.cpp
-      - src/devices/*.hpp
-      - src/devices/*.cpp
-    generate_template_argument_dependencies: false
-    using_namespace:
-      - seabattle
-    include:
-      namespaces:
-        - seabattle
-    exclude: {}

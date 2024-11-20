@@ -1,30 +1,33 @@
 #include "sneaky_attack.hpp"
-#include "messaging/render_messages.hpp"
+#include "ability_registration.hpp"
+#include "renderer/game_renderer.hpp"
 #include <cmath>
 
 namespace seabattle {
     void SneakyAttack::use()
     {
-        std::vector<Ship*> good_ships;
-        for (Ship &ship : ships) {
-            if (!ship.isDestroyed())
-                good_ships.push_back(&ship);
-        }
+        struct Segment {
+            Ship &ship;
+            size_t index;
+        };
 
-        Ship &ship = *good_ships[rand() % good_ships.size()];
-        
-        std::vector<size_t> good_segments;
-        for (size_t i = 0; i < ship.getSize(); i++) {
-            if (ship[i] != Ship::SegmentState::DESTROYED) {
-                good_segments.push_back(i);
+        std::vector<Segment> good_segments;
+        for (Ship &ship : ships) {
+            for (size_t i = 0; i < ship.getSize(); i++) {
+                if (ship[i] != Ship::SegmentState::DESTROYED) {
+                    good_segments.push_back({ ship, i });
+                }
             }
         }
 
-        size_t segment = good_segments[rand() % good_segments.size()];
-        ship.damageSegment(segment);
+        if (good_segments.empty()) {
+            return;
+        }
 
-        emplace<LogMessage>("Sneaky attack was performed successfully");
+        Segment &segment = good_segments[rand() % good_segments.size()];
+        segment.ship.damageSegment(segment.index);
     }
 
-    static bool is_registered  = AbilityRegistry::self().add("Sneaky Attack", [](Player &user, Player &target) { return std::make_unique<SneakyAttack>(target); });
+    void SneakyAttack::renderBy(GameRenderer &renderer) const { renderer.handle(*this); }
+    static AbilityRegistration<SneakyAttack> reg;    
 }

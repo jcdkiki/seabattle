@@ -1,0 +1,43 @@
+6
+2 2 22 22 222 222 
+11 10
+fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
+fog | ship 0 0 | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
+fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
+fog | fog | fog | fog | fog | fog | ship 2 0 | fog | fog | fog | fog | 
+fog | fog | fog | fog | fog | fog | ship 2 1 | fog | fog | fog | fog | 
+fog | fog | fog | ship 1 0 | fog | fog | fog | fog | fog | fog | fog | 
+fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
+fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
+fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
+fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
+0 0
+0
+3
+Scanner
+Sneaky Attack
+Double Damage
+
+0
+
+11 10
+fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
+fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
+fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
+fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
+fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
+fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
+fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
+fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
+fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
+fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
+0 0
+0
+3
+Scanner
+Sneaky Attack
+Double Damage
+
+0 0 0 21845
+PlaceShips
+0 7 7 3

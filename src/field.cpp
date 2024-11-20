@@ -10,7 +10,7 @@ namespace seabattle {
         : size(width, height)
     {
         if (width < 0 || height < 0) {
-            throw std::invalid_argument("invalid field size");
+            throw std::invalid_argument("Invalid field size");
         }
 
         if (width != 0 && height != 0) {
@@ -118,27 +118,34 @@ namespace seabattle {
             delete [] data;
     }
 
-    bool Field::attack(vec2 coordinates, bool hidden)
+    Field::AttackResult Field::attack(vec2 coordinates, bool hidden)
     {
-        bool ok = false;
-
         Cell &cell = getCell(coordinates);
         if (!hidden) {
             cell.has_fog = false;
         }
 
-        if (cell.ship_segment) {
-            if (*cell.ship_segment != Ship::SegmentState::DESTROYED) {
-                ok = true;
-            }
-            
-            cell.ship_segment.damage();
+        if (!cell.ship_segment) {
+            return AttackResult::NOTHING;
         }
 
-        return ok;
+        cell.ship_segment.damage();
+
+        if (cell.ship_segment.getShip().isDestroyed()) {
+            return AttackResult::SHIP_DESTROYED;
+        }
+        return AttackResult::SHIP_DAMAGED;
     }
 
     Field::Cell &Field::getCell(vec2 coordinates)
+    {
+        if (!this->getBoundingBox().contains(coordinates)) {
+            throw IllegalCoordinatesException();
+        }
+        return data[coordinates.x + coordinates.y * size.x];
+    }
+
+    Field::Cell &Field::operator[](vec2 coordinates)
     {
         if (!this->getBoundingBox().contains(coordinates)) {
             throw IllegalCoordinatesException();
@@ -151,6 +158,24 @@ namespace seabattle {
         if (!this->getBoundingBox().contains(coordinates)) {
             throw IllegalCoordinatesException();
         }
-        return data[coordinates.x + coordinates.y * size.x];
+        return data[coordinates.x + coordinates.y * size.x]; 
+    }
+
+    void Field::mark(vec2 position)
+    {
+        if (!getBoundingBox().contains(position)) {
+            return;
+        }
+        getCell(position).marked = !getCell(position).marked;
+    }
+
+    std::ostream &operator<<(std::ostream &os, Field &manager)
+    {
+        return os;
+    }
+
+    std::istream &operator>>(std::istream &is, Field &manager)
+    {
+        return is;
     }
 }

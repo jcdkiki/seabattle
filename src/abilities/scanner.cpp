@@ -1,6 +1,6 @@
 #include "scanner.hpp"
-#include "messaging/render_messages.hpp"
-#include <memory>
+#include "ability_registration.hpp"
+#include "renderer/game_renderer.hpp"
 
 namespace seabattle {
     void Scanner::use()
@@ -10,17 +10,16 @@ namespace seabattle {
 
         for (int y = region.min.y; y < region.max.y; y++) {
             for (int x = region.min.x; x < region.max.x; x++) {
-                if (field[vec2(x, y)].ship_segment) {
-                    emplace<LogMessage>("Scanner found ship in this region");
-                    emplace<RenderFieldMessage>(field, region);
+                if (field[vec2(x, y)].ship_segment && field[vec2(x, y)].has_fog) {
+                    is_found = true;
                     return;
                 }
             }
         }
 
-        emplace<LogMessage>("Scanner didn't find anything :(((");
-        emplace<RenderFieldMessage>(field, region);
+        is_found = false;
     }
 
-    static bool is_registered  = AbilityRegistry::self().add("Scanner", [](Player &user, Player &target) { return std::make_unique<Scanner>(target); });
+    void Scanner::renderBy(GameRenderer &renderer) const { renderer.handle(*this); }
+    static AbilityRegistration<Scanner> reg;    
 }
