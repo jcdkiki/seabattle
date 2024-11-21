@@ -91,9 +91,9 @@ namespace seabattle {
         std::string state_name;
         is >> state_name;
 
-        delete game.state;
-        game.state = StateRegistry::self().find(state_name)->second.generator(game);
+        GameState *new_state = StateRegistry::self().find(state_name)->second.generator(game);
         is >> *game.state;
+        game.updateState(new_state);
 
         return is;
     }

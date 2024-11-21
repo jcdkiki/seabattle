@@ -14,6 +14,9 @@ namespace seabattle {
         bool canPlace();
         void setupOpponentShips();
 
+        void load(std::istream &is);
+        void save(std::ostream &os);
+
     public:
         static constexpr const char *name = "SetupShips";
 

@@ -1,48 +1,32 @@
-6
-2 2 22 22 222 100 
-11 10
-fog | fog | fog | fog | fog | fog | | fog | fog | fog | fog | 
-fog | fog ship 0 0 | fog | fog | fog | fog | fog | fog | fog | ship 5 0 | fog | 
-fog | fog | fog | fog | fog | fog | fog | fog | | ship 5 1 | fog | 
-fog | fog | fog | fog | fog | fog | fog ship 2 0 | fog | fog | ship 5 2 | fog | 
-fog | fog | fog | fog | fog | fog | fog ship 2 1 | fog | fog | | fog | 
-fog | fog | fog | fog ship 1 0 | fog | fog | fog | fog | fog | fog | fog | 
-fog | fog | fog | fog | fog | fog ship 4 0 | fog | fog | fog ship 3 0 | fog | fog | 
-fog | fog | fog | fog | fog | fog ship 4 1 | fog | fog | fog ship 3 1 | fog | fog | 
-fog | fog | fog | fog | fog | fog ship 4 2 | fog | fog | fog | | fog | 
-fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
-6 5
+2
+22 222 
+6 6
+| | | fog | | fog | 
+| fog ship 0 0 | | fog | fog | | 
+| fog ship 0 1 | fog | fog | fog | fog | 
+fog | fog | fog | fog | fog | fog | 
+fog | | fog ship 1 0 | fog ship 1 1 | fog ship 1 2 | fog | 
+fog | fog | fog | | fog | fog | 
+4 2
 0
-6
-Scanner
+1
 Sneaky Attack
-Double Damage
-Scanner
-Sneaky Attack
-Double Damage
 
-6
-2 2 22 22 222 222 
-11 10
-fog | fog | fog ship 2 0 | fog | fog | fog | fog | fog | fog | fog | fog | 
-fog | | fog ship 2 1 | fog | fog | fog | fog | fog | fog | fog ship 0 0 | fog | 
-fog | fog | fog | | fog | fog | fog | fog | fog | fog | fog | 
-fog | fog | fog | | fog | fog | fog ship 1 0 | fog | fog | fog | fog | 
-fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | fog | 
-fog | fog | fog | fog | | fog ship 3 0 | fog | fog | fog | fog | fog | 
-fog | fog | fog | fog | fog | fog ship 3 1 | fog | fog | fog | fog | fog | 
-fog | fog | fog | fog | fog | fog | | fog | fog ship 5 0 | fog | fog | 
-fog | fog ship 4 0 | fog ship 4 1 | fog ship 4 2 | fog | fog | fog | fog | fog ship 5 1 | fog | fog | 
-fog | fog | fog | fog | fog | fog | fog | fog | fog ship 5 2 | fog | fog | 
-9 1
+2
+00 212 
+6 6
+fog | fog | fog | | fog | fog | 
+fog | | fog marked | fog marked | | fog | 
+fog | fog marked | ship 0 0 | fog marked | fog | fog | 
+fog | fog marked | ship 0 1 | fog marked | | fog | 
+| fog marked | marked | fog marked | fog | fog | 
+fog | fog | fog ship 1 0 | fog ship 1 1 | fog ship 1 2 | fog | 
+5 1
 0
-6
-Scanner
-Sneaky Attack
+3
 Double Damage
-Scanner
 Sneaky Attack
-Double Damage
+Scanner
 
-3 9 1 2
+0 5 1 21936
 PlayerAction

@@ -1,6 +1,10 @@
 #include "setup_ships_state.hpp"
 #include "place_ships_state.hpp"
 #include "game.hpp"
+#include "ship.hpp"
+
+#include <istream>
+#include <ostream>
 
 namespace seabattle {
     void SetupShipsState::showPoints()
@@ -52,6 +56,21 @@ namespace seabattle {
         else if (handleXInput(size, message)) {
             game.render("Ship size: " + std::to_string(size)); 
         }
+    }
+
+    void SetupShipsState::load(std::istream &is)
+    {
+        size_t n_sizes;
+        is >> points >> size >> n_sizes;
+
+        ship_sizes.resize(n_sizes);
+        for (auto &x : ship_sizes) is >> x;
+    }
+
+    void SetupShipsState::save(std::ostream &os)
+    {
+        os << points << ' ' << size << ' ' << ship_sizes.size() << ' ';
+        for (auto &x : ship_sizes) os << x << ' ';
     }
 
     static StateRegistration<SetupShipsState> registration;

@@ -11,9 +11,9 @@ namespace seabattle {
     static constexpr rgba32 DAMAGED_SHIP_COLOR(180, 180, 0);
     static constexpr rgba32 DESTROYED_SHIP_COLOR(255, 127, 127);
     static constexpr rgba32 EMPTY_COLOR(127, 127, 255);
-    static constexpr rgba32 DOUBLEDAMAGE_COLOR(255, 127, 127);
-    static constexpr rgba32 SCANNER_COLOR(127, 127, 255);
-    static constexpr rgba32 SNEAKY_ATTACK_COLOR(127, 255, 127);
+    static constexpr rgba32 DOUBLEDAMAGE_COLOR(255, 127, 127, 63);
+    static constexpr rgba32 SCANNER_COLOR(127, 127, 255, 63);
+    static constexpr rgba32 SNEAKY_ATTACK_COLOR(127, 255, 127, 63);
     static constexpr rgba32 CURSOR_COLOR(0, 0, 0);
     constexpr static int FONT_SIZE = 18;
 
@@ -68,7 +68,7 @@ namespace seabattle {
             return;
         }
 
-        float alpha = (float)(tint_time + 500 - cur_time) / 500.f * 0.33f;
+        float alpha = (float)(tint_time + 500 - cur_time) / 500.f;
         SDL_SetRenderDrawColor(renderer, tint_color.r, tint_color.g, tint_color.b, tint_color.a * alpha);
         
         SDL_Rect rect { .x = 0, .y = 0 };
