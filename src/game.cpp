@@ -93,8 +93,9 @@ namespace seabattle {
 
         GameState *new_state = StateRegistry::self().find(state_name)->second.generator(game);
         is >> *game.state;
-        game.updateState(new_state);
-
+        delete game.state;
+        game.state = new_state;
+        
         return is;
     }
 }

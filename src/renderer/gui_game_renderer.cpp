@@ -18,7 +18,7 @@ namespace seabattle {
     constexpr static int FONT_SIZE = 18;
 
     static constexpr vec2 FIELD_POSITION(16, 16);
-    static constexpr vec2 CELL_SIZE(32, 32);
+    static constexpr vec2 CELL_SIZE(32, 16);
 
     void GUIGameRenderer::applyShake()
     {

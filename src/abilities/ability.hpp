@@ -4,7 +4,7 @@
 namespace seabattle {
     class GameRenderer;
 
-    class Ability {;
+    class Ability {
     public:
         virtual void use() = 0;
         virtual void renderBy(GameRenderer &renderer) const = 0;
