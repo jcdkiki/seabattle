@@ -20,8 +20,11 @@ namespace seabattle {
     public:
         static constexpr const char *name = "SetupShips";
 
+        void primaryAction();
+        void secondaryAction();
+        void moveCursor(vec2 amount);        
+
         SetupShipsState(Game &game);
-        void handle(InputMessage message);
         std::string_view getName() const;
     };
 }

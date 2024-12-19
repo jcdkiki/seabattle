@@ -1,28 +1,28 @@
 #include "gui_game_input.hpp"
-#include "input/message.hpp"
+#include "input/input_messages.hpp"
 
 #include <SDL2/SDL.h>
 #include <SDL_keycode.h>
 #include <fstream>
 
 namespace seabattle {
-    void GUIGameInput::handle()
+    InputMessage *GUIGameInput::pollMessage()
     {
         SDL_Event e;
 
-        while (SDL_PollEvent(&e) != 0) {
+        if (SDL_PollEvent(&e) != 0) {
             switch (e.type) {
                 case SDL_QUIT:
-                    game.handle(InputMessage(InputMessage::QUIT));
-                    break;
+                    return new QuitMessage();
                 case SDL_KEYDOWN:
-                    game.handle(controls.keyCodeToMessage(e.key.keysym.sym));
-                    break;
+                    return controls.keyCodeToMessage(e.key.keysym.sym);
             }
         }
+
+        return nullptr;
     }
 
-    GUIGameInput::GUIGameInput(Game &game) : GameInput(game)
+    GUIGameInput::GUIGameInput()
     {
         std::ifstream file("data/controls.cfg");
         file >> controls;

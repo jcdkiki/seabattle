@@ -1,5 +1,4 @@
 #include "game.hpp"
-#include "input/message.hpp"
 #include "player.hpp"
 #include "state_registry.hpp"
 #include "states/setup_field_state.hpp"
@@ -9,60 +8,38 @@
 #include <ostream>
 
 namespace seabattle {
-    Game::Game(GameRenderer &renderer) :
-        renderer(renderer), is_running(true)
+    Game::Game() : is_running(true), renderer(nullptr)
     {
         state = new SetupFieldState(*this);
-        is_state_new = true;
-    }
-
-    void Game::save()
-    {
-        std::ofstream ofs("data/game.sav");
-        ofs << *this;
-        renderer.handle("Game saved!");
     }
 
     void Game::load()
     {
         std::ifstream ifs("data/game.sav");
         if (!ifs.is_open()) {
-            renderer.handle("Failed to load gamesave");
+            render("Failed to load gamesave");
             return;
         }
         ifs >> *this;
-        renderer.handle("Game loaded!");
+        render("Game loaded!");
     }
 
-    void Game::handle(InputMessage message)
+    void Game::save()
     {
-        switch (message.kind) {
-            case InputMessage::QUIT:
-                this->stop();
-                return;
-            
-            case InputMessage::SAVE:
-                this->save();
-                return;
-            
-            case InputMessage::LOAD:
-                this->load();
-                return;
-            
-            default:
-                state->handle(message);
-                is_state_new = false;
-        }
+        std::ofstream ofs("data/game.sav");
+        ofs << *this;
+        render("Game saved!");
+    }
+
+    void Game::quit()
+    {
+        is_running = false;
     }
 
     void Game::updateState(GameState *new_state)
     {
-        if (is_state_new)
-            return;
-
         delete state;
         state = new_state;
-        is_state_new = true;
     }
 
     Game::~Game()

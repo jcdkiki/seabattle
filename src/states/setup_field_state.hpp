@@ -10,8 +10,10 @@ namespace seabattle {
     public:
         static constexpr const char *name = "SetupField";
 
+        void primaryAction();
+        void moveCursor(vec2 amount);     
+
         SetupFieldState(Game &game);
-        void handle(InputMessage message);
         std::string_view getName() const;
     };
 }

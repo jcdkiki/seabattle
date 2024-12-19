@@ -1,5 +1,4 @@
 #include "setup_ai_state.hpp"
-#include "ai_controller.hpp"
 #include "game.hpp"
 #include "player_action_state.hpp"
 
@@ -56,10 +55,10 @@ namespace seabattle {
             opponent.field.addShip(ship, pos, orientation);
         }
 
-        game.render("Press any key to FIGHT!!!");
+        game.render("Press primary key to FIGHT!!!");
     }
 
-    void SetupAIState::handle(InputMessage message)
+    void SetupAIState::primaryAction()
     {
         game.updateState(new PlayerActionState(game));
     }

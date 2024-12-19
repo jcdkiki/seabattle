@@ -33,7 +33,7 @@ namespace seabattle {
         game.render(bbox2(opponent.cursor, opponent.cursor + vec2(1, 1)));
     }
 
-    void AIActionState::handle(InputMessage message)
+    void AIActionState::primaryAction()
     {
         game.updateState(new PlayerActionState(game));
     }

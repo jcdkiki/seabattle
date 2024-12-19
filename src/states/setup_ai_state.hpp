@@ -8,8 +8,9 @@ namespace seabattle {
     public:
         static constexpr const char *name = "SetupAI";
 
+        void primaryAction();
+        
         SetupAIState(Game &game);
-        void handle(InputMessage message);
         std::string_view getName() const;
     };
 }

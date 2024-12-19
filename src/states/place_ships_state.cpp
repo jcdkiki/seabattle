@@ -28,34 +28,37 @@ namespace seabattle {
         game.render(player.field);
     }
 
-    void PlaceShipsState::handle(InputMessage message)
+    void PlaceShipsState::primaryAction()
     {
         Player &player = game.getPlayer();
-        if (message.kind == InputMessage::SECONDARY_ACTION) {
-            orientation = (orientation == Ship::Orientation::HORIZONTAL) ? Ship::Orientation::VERTICAL : Ship::Orientation::HORIZONTAL;
-            game.render(getCursor());
-        }
-        else if (message.kind == InputMessage::PRIMARY_ACTION) {
-            try {
-                player.field.addShip(*current_ship, position, orientation, true);
-                game.render(player.field);
-                current_ship++;
-            }
-            catch (IllegalShipPositionException &e) {
-                game.render(e.what());
-            }
 
-            if (current_ship == player.ships.end()) {
-                player.field.coverInFog();
-                game.updateState(new SetupAIState(game));
-                return;
-            }
+        try {
+            player.field.addShip(*current_ship, position, orientation, true);
+            game.render(player.field);
+            current_ship++;
         }
-        else if (handleXYInput(position, message)) {
-            game.render(getCursor());
+        catch (IllegalShipPositionException &e) {
+            game.render(e.what());
+        }
+
+        if (current_ship == player.ships.end()) {
+            player.field.coverInFog();
+            game.updateState(new SetupAIState(game));
         }
     }
 
+    void PlaceShipsState::secondaryAction()
+    {
+        orientation = (orientation == Ship::Orientation::HORIZONTAL) ? Ship::Orientation::VERTICAL : Ship::Orientation::HORIZONTAL;
+        game.render(getCursor());
+    }
+
+    void PlaceShipsState::moveCursor(vec2 amount)
+    {
+        position += amount;
+        game.render(getCursor());
+    }
+    
     void PlaceShipsState::save(std::ostream &os)
     {
         os << (int)orientation << ' ' << position.x << ' ' << position.y << ' '

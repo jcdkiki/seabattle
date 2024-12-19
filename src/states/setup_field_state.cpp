@@ -14,28 +14,28 @@ namespace seabattle {
         game.render(bbox2(vec2(0, 0), vec2(0, 0)));
     }
 
-    void SetupFieldState::handle(InputMessage message)
+    void SetupFieldState::primaryAction()
     {
         Player &player = game.getPlayer();
         Player &opponent = game.getOpponent();
-        
-        if (handleXYInput(size, message)) {
-            game.render("Field size: " + std::to_string(size.x) + 'x' + std::to_string(size.y));
-            game.render(bbox2(vec2(0, 0), size));
-        }
-        else if (message.kind == InputMessage::PRIMARY_ACTION) {
-            try {
-                player.field = Field(size);
-                opponent.field = Field(size);
-                game.getAIController() = AIController(&player.field);
-                game.updateState(new SetupShipsState(game));
-            }
-            catch (std::invalid_argument &e) {
-                game.render(e.what());
-                return;
-            }
 
+        try {
+            player.field = Field(size);
+            opponent.field = Field(size);
+            game.getAIController() = AIController(&player.field);
+            game.updateState(new SetupShipsState(game));
         }
+        catch (std::invalid_argument &e) {
+            game.render(e.what());
+            return;
+        }
+    }
+
+    void SetupFieldState::moveCursor(vec2 amount)
+    {
+        size += amount;
+        game.render("Field size: " + std::to_string(size.x) + 'x' + std::to_string(size.y));
+        game.render(bbox2(vec2(0, 0), size));
     }
 
     static StateRegistration<SetupFieldState> registration;

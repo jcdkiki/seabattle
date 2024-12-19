@@ -8,8 +8,8 @@ namespace seabattle {
     class GUIGameInput : public GameInput {
         GUIControls controls;
     public:
-        GUIGameInput(Game &game);
-        void handle();
+        GUIGameInput();
+        InputMessage *pollMessage();
     };
 }
 

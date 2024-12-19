@@ -19,7 +19,7 @@ namespace seabattle {
 
     SetupShipsState::SetupShipsState(Game &game) : GameState(game), size(0)
     {
-        Player &player = game.getPlayer();
+        const Player &player = game.getPlayer();
         
         vec2 field_size = player.field.getSize();
         points = field_size.x * field_size.y;
@@ -28,34 +28,35 @@ namespace seabattle {
         showPoints();
     }
 
-    void SetupShipsState::handle(InputMessage message)
+    void SetupShipsState::primaryAction()
     {
-        Player &player = game.getPlayer();
+        if (canPlace()) {
+            ship_sizes.push_back(size);
+            points -= 6 + size*3;
+            game.render("Added ship. Now create another one or proceed to the next stage");
+        }
+        else {
+            game.render("Invalid ship size. Try again");
+        }
+        showPoints();
+    }
 
-        if (message.kind == InputMessage::PRIMARY_ACTION) {
-            if (canPlace()) {
-                ship_sizes.push_back(size);
-                points -= 6 + size*3;
-                game.render("Added ship. Now create another one or proceed to the next stage");
-            }
-            else {
-                game.render("Invalid ship size. Try again");
-            }
-            showPoints();
+    void SetupShipsState::secondaryAction()
+    {
+        try {
+            game.getPlayer().ships = ShipManager(ship_sizes.begin(), ship_sizes.end());
+            game.updateState(new PlaceShipsState(game));
         }
-        else if (message.kind == InputMessage::SECONDARY_ACTION) {
-            try {
-                player.ships = ShipManager(ship_sizes.begin(), ship_sizes.end());
-                game.updateState(new PlaceShipsState(game));
-            }
-            catch (std::invalid_argument &e) {
-                game.render(std::string("Error: ") + e.what() + " | Try again.");
-                game.updateState(new SetupShipsState(game));
-            }
+        catch (std::invalid_argument &e) {
+            game.render(std::string("Error: ") + e.what() + " | Try again.");
+            game.updateState(new SetupShipsState(game));
         }
-        else if (handleXInput(size, message)) {
-            game.render("Ship size: " + std::to_string(size)); 
-        }
+    }
+
+    void SetupShipsState::moveCursor(vec2 amount)
+    {
+        size += amount.x;
+        game.render("Ship size: " + std::to_string(size)); 
     }
 
     void SetupShipsState::load(std::istream &is)

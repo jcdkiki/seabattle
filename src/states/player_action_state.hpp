@@ -5,16 +5,15 @@
 
 namespace seabattle {
     class PlayerActionState : public GameState {
-        void attack();
-        void useAbility();
-        void mark();
-        void move(InputMessage message);
-    
     public:
         static constexpr const char *name = "PlayerAction";
 
+        void primaryAction();
+        void secondaryAction();
+        void tertiaryAction();
+        void moveCursor(vec2 amount);
+
         PlayerActionState(Game &game);
-        void handle(InputMessage message);
         std::string_view getName() const;
     };
 }

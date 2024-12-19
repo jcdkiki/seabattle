@@ -1,5 +1,6 @@
 #include "game.hpp"
-#include <unistd.h>
+#include "input_pipe.hpp"
+#include "render_pipe.hpp"
 
 namespace sb = seabattle;
 
@@ -24,12 +25,12 @@ namespace sb = seabattle;
 
 int main(int argc, char **argv)
 {
-    Renderer renderer;
-    sb::Game game(renderer);
-    Input input(game);
-
+    sb::Game game;
+    sb::InputPipe<Input> input_pipe(game);
+    sb::RenderPipe<Renderer> render_pipe(game);
+    
     while (game.isRunning()) {
-        input.handle();
-        renderer.update();
+        input_pipe.pipeMessages();
+        render_pipe.pipeMessages();
     }
 };

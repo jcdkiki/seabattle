@@ -6,8 +6,8 @@
 namespace seabattle {
     class TUIGameInput : public GameInput {
     public:
-        TUIGameInput(Game &game) : GameInput(game) {}
-        void handle();
+        TUIGameInput();
+        InputMessage *pollMessage();
     };
 }
 

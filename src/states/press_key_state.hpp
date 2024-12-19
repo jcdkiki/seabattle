@@ -4,12 +4,12 @@
 #include "game_state.hpp"
 
 namespace seabattle {
-    class AnyKeyState : public GameState {
+    class PressKeyState : public GameState {
     public:
-        static constexpr const char *name = "AnyKey";
+        static constexpr const char *name = "PressKey";
 
-        AnyKeyState(Game &game);
-        void handle(InputMessage message);
+        PressKeyState(Game &game);
+        void primaryAction();
         std::string_view getName() const;
     };
 }

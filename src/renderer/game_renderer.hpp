@@ -21,9 +21,9 @@ namespace seabattle {
 
         virtual void update() = 0;
 
-        inline void handle(const Ability &ability)
+        inline void handle(const std::shared_ptr<Ability> ability)
         {
-            ability.renderBy(*this);
+            ability->renderBy(*this);
         }
     };
 }
